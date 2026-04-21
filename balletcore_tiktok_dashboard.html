@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmos Archive · TikTok Balletcore Dashboard</title>
+  <style>
+    :root {
+      --bg: #f5f1ea;
+      --bg-soft: #ede7de;
+      --surface: rgba(255, 255, 255, 0.58);
+      --surface-strong: rgba(255, 255, 255, 0.82);
+      --text: #2b2723;
+      --muted: rgba(43, 39, 35, 0.58);
+      --faint: rgba(43, 39, 35, 0.18);
+      --line: rgba(43, 39, 35, 0.12);
+      --accent: #a8957a;
+      --accent-soft: #8f806c;
+      --highlight: #b7a184;
+      --rose: #d8b7bb;
+      --sage: #a9b8a4;
+      --powder: #d9ddea;
+      --tooltip: rgba(255, 252, 247, 0.97);
+      --shadow: 0 24px 80px rgba(120, 102, 83, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 16%, rgba(194, 177, 153, 0.18), transparent 26%),
+        radial-gradient(circle at 82% 12%, rgba(188, 182, 172, 0.14), transparent 22%),
+        radial-gradient(circle at 70% 78%, rgba(194, 178, 154, 0.12), transparent 20%),
+        linear-gradient(180deg, #f8f5ef 0%, #f3eee5 44%, #efe8de 100%);
+      letter-spacing: 0.01em;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 12% 22%, rgba(67,57,47,0.12) 0 0.8px, transparent 1px),
+        radial-gradient(circle at 78% 30%, rgba(67,57,47,0.09) 0 0.9px, transparent 1.1px),
+        radial-gradient(circle at 62% 70%, rgba(67,57,47,0.07) 0 0.8px, transparent 1px),
+        radial-gradient(circle at 34% 84%, rgba(67,57,47,0.06) 0 0.7px, transparent 0.9px);
+      opacity: 0.22;
+    }
+
+    .page {
+      max-width: 1540px;
+      margin: 0 auto;
+      padding: 24px 24px 30px;
+      position: relative;
+    }
+
+    .eyebrow,
+    .cluster-kicker,
+    label,
+    .microcopy,
+    .pill,
+    .stat-label,
+    .chip {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .masthead {
+      margin-bottom: 18px;
+    }
+
+    .site-nav {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .site-nav-shell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.48);
+      border: 1px solid rgba(67,57,47,0.08);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .site-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: color 220ms ease;
+    }
+
+    .site-link:hover,
+    .site-link.is-active {
+      color: var(--text);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      justify-items: center;
+    }
+
+    .hero > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 900px;
+      font-size: clamp(3.2rem, 5.8vw, 6.2rem);
+      line-height: 0.94;
+      font-weight: 300;
+      letter-spacing: -0.045em;
+      text-align: center;
+    }
+
+    .lead {
+      margin: 12px 0 0;
+      max-width: 720px;
+      color: rgba(43, 39, 35, 0.68);
+      font-size: 15px;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .curation {
+      width: min(620px, 100%);
+      padding: 8px 12px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 251, 245, 0.5));
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      display: grid;
+      grid-template-columns: auto minmax(150px, 190px) minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      margin: 0 auto;
+    }
+
+    .curation .microcopy,
+    .curation label {
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      opacity: 0.72;
+    }
+
+    .curation .microcopy {
+      white-space: nowrap;
+    }
+
+    .curation-copy {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.35;
+      color: rgba(43, 39, 35, 0.56);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: "↘";
+      position: absolute;
+      right: 2px;
+      top: 7px;
+      color: var(--muted);
+      font-size: 16px;
+      pointer-events: none;
+    }
+
+    select {
+      width: 100%;
+      appearance: none;
+      border: none;
+      outline: none;
+      border-radius: 18px;
+      padding: 8px 26px 8px 0;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.52);
+      border: 1px solid rgba(67,57,47,0.06);
+      letter-spacing: 0.14em;
+    }
+
+    .constellation {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+      grid-auto-flow: dense;
+    }
+
+    .cluster {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 18px 18px 16px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(255, 251, 245, 0.42));
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+      transition: transform 420ms ease, background 420ms ease;
+    }
+
+    .cluster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      border: 1px solid rgba(67, 57, 47, 0.05);
+    }
+
+    .cluster:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 251, 245, 0.5));
+    }
+
+    .cluster-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .cluster-head h2 {
+      margin: 4px 0 0;
+      font-weight: 300;
+      font-size: 24px;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+
+    .cluster-meta {
+      max-width: 300px;
+      color: rgba(43, 39, 35, 0.62);
+      font-size: 12px;
+      line-height: 1.55;
+      text-align: right;
+    }
+
+    .cluster-scatter { grid-column: span 7; padding-top: 16px; }
+    .cluster-relevant { grid-column: span 5; }
+    .cluster-timeline { grid-column: span 7; }
+    .cluster-screening { grid-column: span 5; }
+    .cluster-trend { grid-column: span 7; }
+    .cluster-breakouts { grid-column: span 5; }
+    .cluster-network { grid-column: span 7; }
+    .cluster-notes { grid-column: span 5; display: flex; flex-direction: column; }
+    .cluster-archetypes { grid-column: span 12; }
+
+    svg { width: 100%; height: auto; display: block; }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .legend-bar {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(67,57,47,0.08), rgba(183,161,132,0.7));
+    }
+
+    .list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .list-scroll {
+      max-height: 340px;
+      overflow-y: auto;
+      padding-right: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(168,149,122,0.45) transparent;
+    }
+
+    .cluster-relevant .list-scroll {
+      flex: 0 0 auto;
+      max-height: 470px;
+      min-height: 0;
+    }
+
+    .list-scroll::-webkit-scrollbar,
+    .reel-track::-webkit-scrollbar {
+      height: 8px;
+      width: 8px;
+    }
+
+    .list-scroll::-webkit-scrollbar-thumb,
+    .reel-track::-webkit-scrollbar-thumb {
+      background: rgba(168,149,122,0.42);
+      border-radius: 999px;
+    }
+
+    .list-item {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(67, 57, 47, 0.08);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 320ms ease;
+    }
+
+    .list-item:hover { transform: translateX(6px); }
+    .list-rank { color: rgba(43,39,35,0.44); font-size: 13px; letter-spacing: 0.12em; }
+    .list-name { font-size: 17px; font-weight: 300; line-height: 1.22; margin-bottom: 4px; }
+    .list-meta { color: rgba(43,39,35,0.56); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+    .list-value { text-align: right; }
+    .list-value strong { display: block; font-weight: 300; font-size: 21px; letter-spacing: -0.02em; }
+    .list-value span { color: rgba(43,39,35,0.48); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+
+    .notes-grid {
+      display: grid;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .note-block {
+      padding: 8px 0;
+      border-top: 1px solid rgba(67, 57, 47, 0.08);
+    }
+
+    .note-value {
+      font-size: clamp(1.65rem, 3.4vw, 2.8rem);
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .note-subvalue {
+      margin-top: 6px;
+      color: rgba(43, 39, 35, 0.56);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.48);
+      border: 1px solid rgba(67,57,47,0.06);
+      text-transform: none;
+      letter-spacing: 0.05em;
+      font-size: 12px;
+      color: rgba(43,39,35,0.72);
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: baseline;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(67,57,47,0.07);
+    }
+
+    .stat-label { letter-spacing: 0.12em; }
+    .stat-value { font-size: 17px; font-weight: 300; }
+
+    .archetype-card {
+      padding: 10px 0 12px;
+      border-top: 1px solid rgba(67,57,47,0.08);
+    }
+
+    .archetype-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 10px;
+    }
+
+    .archetype-name { font-size: 18px; font-weight: 300; }
+    .bar-track { height: 8px; border-radius: 999px; background: rgba(67,57,47,0.08); overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, rgba(183,161,132,0.85), rgba(216,183,187,0.9)); }
+
+    .network-wrap,
+    .trend-wrap,
+    .scatter-wrap,
+    .timeline-wrap,
+    .screening-wrap { position: relative; }
+
+    .screening-wrap {
+      display: grid;
+      gap: 10px;
+    }
+
+    .screening-player {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      background: linear-gradient(180deg, rgba(67,57,47,0.08), rgba(67,57,47,0.02));
+      aspect-ratio: 9 / 15;
+      max-height: 360px;
+      min-height: 260px;
+    }
+
+    .screening-player iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .screening-fallback {
+      position: absolute;
+      inset: auto 18px 18px 18px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      background: rgba(255,251,245,0.88);
+      border: 1px solid rgba(67,57,47,0.08);
+      color: rgba(43,39,35,0.66);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .screening-fallback a {
+      color: var(--text);
+    }
+
+    .reel-track {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(160px, 190px);
+      gap: 8px;
+      overflow-x: auto;
+      padding: 2px 2px 6px;
+      scroll-snap-type: x proximity;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(168,149,122,0.45) transparent;
+    }
+
+    .reel-card {
+      scroll-snap-align: start;
+      padding: 12px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.46);
+      border: 1px solid rgba(67,57,47,0.06);
+      text-align: left;
+      cursor: pointer;
+      transition: transform 260ms ease, background 260ms ease, border-color 260ms ease;
+      color: inherit;
+    }
+
+    .reel-card:hover,
+    .reel-card.is-active {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.72);
+      border-color: rgba(168,149,122,0.26);
+    }
+
+    .reel-card strong {
+      display: block;
+      margin: 10px 0 6px;
+      font-size: 17px;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+    }
+
+    .reel-card p {
+      margin: 8px 0 0;
+      color: rgba(43,39,35,0.6);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .reel-card .list-meta {
+      display: block;
+      margin-top: 4px;
+    }
+
+    .screening-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .screening-button {
+      appearance: none;
+      border: 1px solid rgba(67,57,47,0.08);
+      background: rgba(255,255,255,0.56);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .screening-button:hover {
+      background: rgba(255,255,255,0.82);
+    }
+
+    .tooltip {
+      position: fixed;
+      pointer-events: none;
+      background: var(--tooltip);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      line-height: 1.55;
+      border: 1px solid rgba(67, 57, 47, 0.08);
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 12px));
+      white-space: nowrap;
+      z-index: 20;
+      box-shadow: 0 18px 46px rgba(120, 102, 83, 0.16);
+      transition: opacity 180ms ease;
+    }
+
+    .axis, .axis-label {
+      fill: rgba(43,39,35,0.46);
+      font-size: 11px;
+      font-family: Inter, Helvetica, Arial, sans-serif;
+      letter-spacing: 0.03em;
+    }
+
+    .axis-line, .grid-line {
+      stroke: rgba(67,57,47,0.1);
+      stroke-width: 1;
+    }
+
+    .muted-copy {
+      color: rgba(43,39,35,0.58);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .small-note {
+      margin-top: 8px;
+      color: rgba(43,39,35,0.48);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 1240px) {
+      .hero,
+      .constellation { grid-template-columns: 1fr; }
+
+      .curation {
+        width: 100%;
+      }
+      .cluster-scatter,
+      .cluster-relevant,
+      .cluster-timeline,
+      .cluster-screening,
+      .cluster-trend,
+      .cluster-notes,
+      .cluster-network,
+      .cluster-archetypes {
+        grid-column: auto;
+        transform: none;
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page { padding: 24px 18px 32px; }
+      h1 { font-size: 2.8rem; }
+      .cluster, .curation { padding: 20px 18px; border-radius: 24px; }
+      .cluster-head { flex-direction: column; }
+      .cluster-meta { text-align: left; max-width: none; }
+      .curation {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        border-radius: 20px;
+      }
+      .curation-copy {
+        white-space: normal;
+      }
+      .list-item { grid-template-columns: 28px minmax(0,1fr); }
+      .list-value { grid-column: 2; text-align: left; }
+      .screening-player { min-height: 300px; }
+      .reel-track { grid-auto-columns: 84%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="site-nav">
+      <div class="site-nav-shell">
+        <a class="site-link" href="index.html">Home</a>
+        <a class="site-link" href="dma_aesthetic_map.html">Map</a>
+        <a class="site-link is-active" href="balletcore_tiktok_dashboard.html">TikTok</a>
+      </div>
+    </div>
+
+    <header class="masthead">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Cosmos archive · TikTok search relevance</div>
+          <h1>Balletcore on TikTok.</h1>
+        </div>
+        <aside class="curation">
+          <div class="microcopy">Curated lens</div>
+          <div>
+            <label for="lens-select">Archive slice</label>
+            <div class="select-wrap">
+              <select id="lens-select">
+                <option value="recent">April 2026 snapshot</option>
+                <option value="all" selected>Full archive</option>
+              </select>
+            </div>
+          </div>
+          <p id="curation-copy" class="curation-copy"></p>
+          <div class="pills" id="hero-pills"></div>
+        </aside>
+      </div>
+    </header>
+
+    <main class="constellation">
+      <section class="cluster cluster-scatter">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Relevance × virality</div>
+            <h2>Algorithmic rank and audience response rarely move in lockstep.</h2>
+          </div>
+          <div class="cluster-meta">Each point is a video. Lower rank is more relevant to the search term. Higher vertical position means more views on a log scale. Point size tracks engagement rate.</div>
+        </div>
+        <div class="scatter-wrap">
+          <svg id="scatter-chart" viewBox="0 0 760 500" aria-label="Relevance versus virality chart"></svg>
+        </div>
+        <div class="legend"><span>Low rank</span><div class="legend-bar"></div><span>High views</span></div>
+      </section>
+
+      <section class="cluster cluster-relevant">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Most relevant now</div>
+            <h2 id="list-title">April 2026 videos, scored for freshness.</h2>
+          </div>
+          <div class="cluster-meta">The current snapshot blends recency, rank position, engagement rate, and raw view strength to surface the clips most legible to the algorithm right now.</div>
+        </div>
+        <div class="list list-scroll" id="relevant-list"></div>
+      </section>
+
+      <section class="cluster cluster-timeline">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Views over time</div>
+            <h2>Monthly view totals reveal when the archive actually caught fire.</h2>
+          </div>
+          <div class="cluster-meta">This chart aggregates total views by upload month, so the shape reads as momentum rather than individual outliers. It gives you a cleaner sense of when balletcore relevance compounds.</div>
+        </div>
+        <div class="timeline-wrap">
+          <svg id="timeline-chart" viewBox="0 0 820 420" aria-label="Views by upload date chart"></svg>
+        </div>
+        <div class="small-note">Months in the active lens are highlighted, so you can compare the current slice against the full archive's accumulated view volume.</div>
+      </section>
+
+      <section class="cluster cluster-screening">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Screening room</div>
+            <h2>Watch the top 5 without leaving the dashboard.</h2>
+          </div>
+          <div class="cluster-meta">Tap any reel card to load its TikTok player. The tray scrolls horizontally, so you can skim the short list like a mini screening deck.</div>
+        </div>
+        <div class="screening-wrap">
+          <div class="screening-player">
+            <iframe id="screening-iframe" title="TikTok screening player" allowfullscreen loading="lazy"></iframe>
+            <div class="screening-fallback" id="screening-fallback"></div>
+          </div>
+          <div class="screening-actions">
+            <div class="microcopy" id="screening-label">Top 5 most relevant videos</div>
+            <button class="screening-button" id="screening-open" type="button">Open current video</button>
+          </div>
+          <div class="reel-track" id="screening-reel"></div>
+        </div>
+      </section>
+
+      <section class="cluster cluster-trend">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Archive rhythm</div>
+            <h2>Posting density and engagement move in seasonal pulses.</h2>
+          </div>
+          <div class="cluster-meta">Bars show video count by month. The line shows total engagement divided by total views for that month, making spikes readable even when the archive volume changes.</div>
+        </div>
+        <div class="trend-wrap">
+          <svg id="trend-chart" viewBox="0 0 820 430" aria-label="Monthly trend chart"></svg>
+        </div>
+        <div class="small-note">The April 2026 filter keeps the full monthly series visible so you can compare the current slice against the longer memory of the archive.</div>
+      </section>
+
+      <section class="cluster cluster-breakouts">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Breakout creators</div>
+            <h2>Small or mid-sized accounts with outsized reach.</h2>
+          </div>
+          <div class="cluster-meta">This widget ranks creators by views relative to follower count, helping you spot who is outperforming their audience base inside the balletcore search field.</div>
+        </div>
+        <div class="list list-scroll" id="creator-list"></div>
+      </section>
+
+      <section class="cluster cluster-network">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Hashtag constellation</div>
+            <h2>Core tags hold the trend together while adjacent tags style the edges.</h2>
+          </div>
+          <div class="cluster-meta">Node size represents hashtag frequency. Lines connect tags that appear together repeatedly in the same post, revealing the shape of the balletcore language stack.</div>
+        </div>
+        <div class="network-wrap">
+          <svg id="network-chart" viewBox="0 0 760 480" aria-label="Hashtag network"></svg>
+        </div>
+        <div class="legend"><span>Peripheral tags</span><div class="legend-bar"></div><span>Core cluster</span></div>
+      </section>
+
+      <section class="cluster cluster-notes">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Reading notes</div>
+            <h2>Fast signals for the current lens.</h2>
+          </div>
+          <div class="cluster-meta">These summary notes update when you switch between the April 2026 slice and the full archive.</div>
+        </div>
+        <div class="notes-grid" id="notes-grid"></div>
+        <div>
+          <div class="microcopy">Top hashtags in frame</div>
+          <div class="chip-grid" id="hashtag-chips"></div>
+          <div id="country-note" class="small-note"></div>
+        </div>
+      </section>
+
+      <section class="cluster cluster-archetypes">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Format analysis</div>
+            <h2>Styling dominates the archive, but technique and classwear travel further.</h2>
+          </div>
+          <div class="cluster-meta">Archetypes are inferred from caption and hashtag language. Each band shows archive share, then summarizes average views and engagement.</div>
+        </div>
+        <div id="archetype-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script>
+    const DATA = {"meta":{"term":"balletcore outfits","rows":186,"recentRows":23,"dateMin":"2022-03-04","dateMax":"2026-04-21","note":"No explicit country field exists in the CSV; the USA framing is collection context rather than a dataset column."},"videos":[{"rank":1,"date":"2023-07-15","month":"2023-07","author":"marinatingmari","followers":90100,"views":451600,"engagement":0.0714,"vpf":5.01,"duration":126,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballet","#balletcore","#balletcoreaesthetic","#balletcorefashion","#balletcoreoutfit","#corporategirlies","#grwm","#officestyle"],"archetype":"GRWM / styling","caption":"🩰 ask and you shall receive 🩰 #ballet #balletcore #balletcoreaesthetic #balletcoreoutfit #balletcorefashion #corporategirlies #styleadvice #grwm #officestyle #stylist","url":"https://www.tiktok.com/@marinatingmari/video/7255873274637225224"},{"rank":2,"date":"2024-08-14","month":"2024-08","author":"imperfectpointes","followers":17700,"views":2600000,"engagement":0.0264,"vpf":146.89,"duration":18,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#balletclass","#balletcommunity","#balletcore","#balletdancer","#balletfashion","#balletoutfit"],"archetype":"GRWM / styling","caption":"Wearing your favourite leotard makes all the difference ❤️♻️🩰  @Chloe wears The Haina leotard and sustainable ballet tights  #ballet #ballerina #balletcore #dancewear #balletdancer","url":"https://www.tiktok.com/@imperfectpointes/video/7402926883001748768"},{"rank":3,"date":"2023-01-27","month":"2023-01","author":"styledbyhan","followers":150600,"views":323800,"engagement":0.0532,"vpf":2.15,"duration":43,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerinacore","#balletcore","#balletcoreaesthetic","#balletcorefashion","#balletcoreoutfit","#balletcoreoutfits","#revolveme"],"archetype":"GRWM / styling","caption":"style a ballerina core outfit with me (i just wanted to try this trend at least ONCE) #balletcore #balletcoreaesthetic #balletcoreoutfit #balletcorefashion #balletcoreoutfits #ball","url":"https://www.tiktok.com/@styledbyhan/video/7193399932827471109"},{"rank":4,"date":"2026-02-11","month":"2026-02","author":"pearlywurly","followers":26200,"views":227400,"engagement":0.1312,"vpf":8.68,"duration":17,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#fashion","#outfit","#pink","#styleinspo"],"archetype":"GRWM / styling","caption":"little bo peep ootd do we like?🐑🎀 #styleinspo #fashion #outfit #balletcore #pink","url":"https://www.tiktok.com/@pearlywurly/video/7605543309276171527"},{"rank":5,"date":"2024-10-26","month":"2024-10","author":"nat.alie.dances","followers":74200,"views":3100000,"engagement":0.1379,"vpf":41.78,"duration":11,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerinasoftiktok","#balletclass","#balletcore","#balletcoreoutfit","#ballettiktok","#ballettok","#dancetok","#fyp"],"archetype":"GRWM / styling","caption":"Be warned. #balletcoreoutfit #ballettiktok #ballerinasoftiktok #professionaldancersoftiktok #ballettok #balletcore #lorax #balletclass ##fyp##professionalballerina##dancetok","url":"https://www.tiktok.com/@nat.alie.dances/video/7430164179509595434"},{"rank":6,"date":"2025-08-04","month":"2025-08","author":"tutucarolyn","followers":37500,"views":31400,"engagement":0.06,"vpf":0.84,"duration":206,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballerina","#ballet","#balletcore","#balletoutfit","#dancewear"],"archetype":"GRWM / styling","caption":"I get a lot of my leos from Poshmark 😉 @Eleve Dancewear  @xiaoxiaodesigns @BodileBallet  @RubiaWear  @R-Class US  @Body Wrappers  @wearmoi  @HOKA  #dancewear #ballet #balletoutfit ","url":"https://www.tiktok.com/@tutucarolyn/video/7534818575572356383"},{"rank":7,"date":"2026-01-08","month":"2026-01","author":"rubyyjosephine","followers":301900,"views":112400,"engagement":0.056,"vpf":0.37,"duration":36,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore","#balletootd","#balletoutfit","#fitcheck","#ootd"],"archetype":"GRWM / styling","caption":"little fit check with @Wendy 🌟 #balletootd #fitcheck #ootd #balletoutfit #balletcore","url":"https://www.tiktok.com/@rubyyjosephine/video/7592804619064036639"},{"rank":8,"date":"2024-01-19","month":"2024-01","author":"lcgirard","followers":213500,"views":1900000,"engagement":0.0497,"vpf":8.9,"duration":24,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#yesand"],"archetype":"GRWM / styling","caption":"Replying to @lcareypatterson balletcore is just wearing all the clothes you already have but the wrong way #yesand","url":"https://www.tiktok.com/@lcgirard/video/7325872804870507819"},{"rank":9,"date":"2024-06-10","month":"2024-06","author":"juliiannalee","followers":57700,"views":23800,"engagement":0.0315,"vpf":0.41,"duration":36,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballet","#balletcore","#balletcoreaesthetic","#balletcoremakeup","#balletcoreoutfit","#balletcoreoutfits","#balletdancer","#fashiontiktok"],"archetype":"GRWM / styling","caption":"Part 2 coming tmrw ☺️🩰 #balletcore #balletcoreaesthetic #balletcoreoutfit #balletcoremakeup #balletcoreoutfits #outfitinspo #fashiontiktok #fashiontrends #girlyfashion #girlyoutfit","url":"https://www.tiktok.com/@juliiannalee/video/7378936718986300718"},{"rank":10,"date":"2024-02-09","month":"2024-02","author":"boringbb","followers":1100000,"views":645000,"engagement":0.1102,"vpf":0.59,"duration":12,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletcore","#fashiondesign","#fashiondesigner"],"archetype":"GRWM / styling","caption":"stying a ballet core outfit 🩰🎀 using the Sabrina one piece & Lorelei skirt in ballet pink from Julia X JVB #fashiondesigner #fashiondesign #balletcore","url":"https://www.tiktok.com/@boringbb/video/7333683298180369707"},{"rank":11,"date":"2023-07-29","month":"2023-07","author":"tutucarolyn","followers":37500,"views":374700,"engagement":0.0313,"vpf":9.99,"duration":17,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballerina","#ballerinas","#ballet","#balletcore","#balletcoreaesthetic","#balletcoreoutfit","#balletoutfit","#ballettok"],"archetype":"GRWM / styling","caption":"Part 2 of sorts #ballet #ballerina #fyp #fypシ #balletcore #barbie #professionalballerina #ballettok #ballerinas #dancer #dancers #professionaldancer #viral #outfit #balletoutfit #b","url":"https://www.tiktok.com/@tutucarolyn/video/7261381475503721774"},{"rank":12,"date":"2024-06-21","month":"2024-06","author":"bodileballet","followers":14000,"views":410700,"engagement":0.0617,"vpf":29.34,"duration":17,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballerinacheck","#balletclass","#balletcore","#balletcoreaesthetic","#balletcoreoutfit","#balletdancer","#balletfashion","#balletoutfitdeas"],"archetype":"GRWM / styling","caption":"Ballet class outfits of the day 🩰🌸💞✨ Find any inspo? 👀 #balletdancer #bodileballet #bodilebaddie #balletcoreoutfit #dancersoftiktok #balletfashion #balletcore #ballerinacheck #ball","url":"https://www.tiktok.com/@bodileballet/video/7382824326531271953"},{"rank":13,"date":"2023-11-06","month":"2023-11","author":"reallifebabyfawn","followers":10000,"views":24100,"engagement":0.1303,"vpf":2.41,"duration":13,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#aesthetic","#balletcore","#balletcoreaesthetic","#balletcoreoutfit","#coquettecore","#coquettestyle","#xoangelcakexoo"],"archetype":"GRWM / styling","caption":"balletcore outfit 🤍#balletcoreoutfit #balletcore #coquettecore #coquettestyle #balletcoreaesthetic #aesthetic #xoangelcakexoo","url":"https://www.tiktok.com/@reallifebabyfawn/video/7298467434053258497"},{"rank":14,"date":"2022-05-01","month":"2022-05","author":"adele.glow","followers":644,"views":1400000,"engagement":0.108,"vpf":2173.91,"duration":12,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletaesthetic","#balletcore","#balletfit","#balletoutfit","#ellefanning","#fyp","#sorryforthehashtags"],"archetype":"GRWM / styling","caption":"Such a mood  #ellefanning #balletoutfit #balletcore #balletaesthetic #ballet #balletfit #fyp #sorryforthehashtags","url":"https://www.tiktok.com/@adele.glow/video/7092749044543524102"},{"rank":15,"date":"2023-02-22","month":"2023-02","author":"coquette_archive","followers":2479,"views":38700,"engagement":0.0519,"vpf":15.61,"duration":15,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#balletcore","#balletcoreaesthetic","#fyp","#girlblog","#lanadelrey","#pinterest","#trebdyol","#viral"],"archetype":"Aesthetic / moodboard","caption":"Saten babetlere aşıkkkk oldummmm🥺🥺🥺🦢 #lanadelrey #girlblog #pinterest #fyp #viral #trebdyol #balletcore #balletcoreaesthetic #balletcoreaesthetic","url":"https://www.tiktok.com/@coquette_archive/video/7202889734287330566"},{"rank":16,"date":"2022-06-16","month":"2022-06","author":"_christianawebster","followers":136900,"views":109700,"engagement":0.0843,"vpf":0.8,"duration":46,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#balletcore","#curvy","#curvybodies","#curvyfashion","#curvytiktok","#fatpositive","#ootd","#outfitideas"],"archetype":"GRWM / styling","caption":"I dont usually get rhis peraonal on here but i thought since balletcore was trneding i would tell it 🩰💕 #plussize #plussizeedition #plussizefashion #curvy #curvybodies #curvyfashio","url":"https://www.tiktok.com/@_christianawebster/video/7109960813703695622"},{"rank":17,"date":"2026-03-25","month":"2026-03","author":"imperfectpointes","followers":17700,"views":126200,"engagement":0.0128,"vpf":7.13,"duration":11,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletbrand","#balletcore","#balletdancer","#chic","#imperfectpointes"],"archetype":"GRWM / styling","caption":"the ultimate chic outfit 🩰 Fiona Lee of the Royal Danish Ballet wearing Imperfect Pointes ‘We Got Boobs’ leotard and NEW GUSSET LESS sustainably made ballet tights ✨ #imperfectpoin","url":"https://www.tiktok.com/@imperfectpointes/video/7621133402590154006"},{"rank":18,"date":"2023-04-12","month":"2023-04","author":"michellecheng_","followers":9497,"views":1300000,"engagement":0.0684,"vpf":136.89,"duration":26,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#fyp","#getdressedwithme","#grwm","#nz","#outfitinspo"],"archetype":"GRWM / styling","caption":"in my balletcore era 🩰🦢 #outfitinspo #getdressedwithme #grwm #fyp #nz","url":"https://www.tiktok.com/@michellecheng_/video/7220957161889860866"},{"rank":19,"date":"2024-09-21","month":"2024-09","author":"nat.alie.dances","followers":74200,"views":219000,"engagement":0.0594,"vpf":2.95,"duration":15,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#balletcore","#balletfitcheck","#balletoutfit","#ballettiktok","#ballettok","#ballettrend","#fitcheck"],"archetype":"GRWM / styling","caption":"REAL Ballet core 😍 @aurora grace 🩰🤍 #balletcore #ballettok #ballerina #ballettiktok #ballettrend #professionaldancer #professionalballerina #balletoutfit #balletfitcheck #fitcheck ","url":"https://www.tiktok.com/@nat.alie.dances/video/7417072202173926699"},{"rank":20,"date":"2023-03-26","month":"2023-03","author":"morgan.ag","followers":490000,"views":436800,"engagement":0.083,"vpf":0.89,"duration":59,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore"],"archetype":"GRWM / styling","caption":"This is one of the weirder outfits I’ve created and I love it omg! #balletcore fr","url":"https://www.tiktok.com/@morgan.ag/video/7214951840557829419"},{"rank":21,"date":"2022-10-03","month":"2022-10","author":"ballerinabel","followers":58300,"views":32400,"engagement":0.0439,"vpf":0.56,"duration":29,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#andgo","#ballerina","#balletcore","#balletoutfits","#ballettok","#fyp","#xyzbca"],"archetype":"GRWM / styling","caption":"The girls that get it get it 💅🏼 #ballettok #balletcore #balletoutfits #ballerina #andGO #xyzbca #fyp","url":"https://www.tiktok.com/@ballerinabel/video/7150402255924055302"},{"rank":22,"date":"2024-05-25","month":"2024-05","author":"jacquiebebe","followers":94800,"views":70500,"engagement":0.0146,"vpf":0.74,"duration":59,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#fashion","#frenchstyle","#fyp","#girlstyles","#grwmfashion","#ootd"],"archetype":"GRWM / styling","caption":"this is how to dress if youre going to a ballet #fyp #fashion #summerstyle #style #ootd #outfitdance #whattowear #girlstyles #grwmfashion #ballet #parisianstyle #frenchstyle #balle","url":"https://www.tiktok.com/@jacquiebebe/video/7373046184371293445"},{"rank":23,"date":"2025-04-13","month":"2025-04","author":"ja.lw","followers":594700,"views":299900,"engagement":0.2215,"vpf":0.5,"duration":8,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#comedy","#dance","#danceteacher","#dancetechnique","#funny","#hiphop"],"archetype":"Classwear / rehearsal","caption":"a throwback from last year because it still reigns true i did my time in leotards and now im FREE #balletcore #throwback #ballet #comedy #funny #dance #danceteacher #dancetechnique","url":"https://www.tiktok.com/@ja.lw/video/7492925088539479327"},{"rank":24,"date":"2024-08-02","month":"2024-08","author":"laceandlashes","followers":88200,"views":70600,"engagement":0.0614,"vpf":0.8,"duration":125,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletcore","#girlyaesthetic","#pinklover"],"archetype":"Aesthetic / moodboard","caption":"balletcore collection haul from aerie! 🩰 #balletcore #girlyaesthetic #pinklover","url":"https://www.tiktok.com/@laceandlashes/video/7398343139980823839"},{"rank":25,"date":"2026-01-22","month":"2026-01","author":"brookedevower","followers":35900,"views":131100,"engagement":0.1265,"vpf":3.65,"duration":7,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletcore","#balletdancer","#balletoutfit","#ballettok","#mirrorball"],"archetype":"GRWM / styling","caption":"every dancer ever🤝 mirrorball  (if anyone comes for my leg height I’m deleting the app) #ballettok #mirrorball #balletoutfit #balletcore #balletdancer","url":"https://www.tiktok.com/@brookedevower/video/7598310142945365279"},{"rank":26,"date":"2023-12-05","month":"2023-12","author":"ari.x_","followers":3227,"views":20000,"engagement":0.0299,"vpf":6.2,"duration":15,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballet","#balletcore","#balletcoreaesthetic","#balletcoreblackgirl","#balletcoreoutfit","#balletcoreoutfits","#balletoutfit","#pinkoutfit"],"archetype":"GRWM / styling","caption":"The last one is giving pink pilates princess vibes 🎀🩰  & how do we feel about the whole “balletcore” trend?  #ballet #balletcore #balletcoreaesthetic #balletcoreoutfit #balletcoreo","url":"https://www.tiktok.com/@ari.x_/video/7308940651918380330"},{"rank":27,"date":"2023-05-29","month":"2023-05","author":"domi.knows","followers":5208,"views":407200,"engagement":0.035,"vpf":78.19,"duration":13,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerinacore","#balletaesthetic","#balletcore","#balletcoreaesthetic","#balletoutfitdeas","#coquetteaesthetic","#dollettecore","#girlyaesthetic"],"archetype":"GRWM / styling","caption":"for my ballet core girlies🩰🤍 #balletcore #balletcoreaesthetic #ballerinacore #balletoutfitdeas #balletaesthetic #girlyaesthetic #coquetteaesthetic #howtostyle #pinkaesthetic #dolle","url":"https://www.tiktok.com/@domi.knows/video/7238665185362300202"},{"rank":28,"date":"2025-01-24","month":"2025-01","author":"belle_urwin","followers":328000,"views":2300000,"engagement":0.1208,"vpf":7.01,"duration":35,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballerina","#balletcore","#ballettok"],"archetype":"Performance / technique","caption":"dress code - anything oversized, old tights as tops, bandanas are a must and extra points if everything has holes in it 🥰🥰🥰 #ballerina #balletcore #ballettok","url":"https://www.tiktok.com/@belle_urwin/video/7463393488751709458"},{"rank":29,"date":"2025-08-19","month":"2025-08","author":"rubyyjosephine","followers":301900,"views":249300,"engagement":0.0608,"vpf":0.83,"duration":35,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#balletcore","#balletootd","#balletoutfit","#ballettiktok","#bamarush","#ootd"],"archetype":"GRWM / styling","caption":"ballerina ootd with @Rose and @✨jess✨ 💕 #ballerina #ballettiktok #ballet #balletcore #balletoutfit #balletootd #ootd #bamarush","url":"https://www.tiktok.com/@rubyyjosephine/video/7540321716699008287"},{"rank":30,"date":"2023-03-01","month":"2023-03","author":"havenmcnabb","followers":42500,"views":43600,"engagement":0.1716,"vpf":1.03,"duration":22,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore","#fashion","#layering","#styleinspo"],"archetype":"GRWM / styling","caption":"i feel cute in this outfit <3 #fashion #layering #balletcore #styleinspo","url":"https://www.tiktok.com/@havenmcnabb/video/7205688363456924933"},{"rank":31,"date":"2025-12-16","month":"2025-12","author":"elenakatey","followers":489500,"views":6228,"engagement":0.0454,"vpf":0.01,"duration":13,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletcore","#coquetteaesthetic","#girlystyle","#girlythings","#pinkgirl"],"archetype":"GRWM / styling","caption":"Balletcore 101 🩰🦢 outfit - @Angel Ruche  #balletcore #coquetteaesthetic #girlythings #girlystyle #pinkgirl","url":"https://www.tiktok.com/@elenakatey/video/7584564752391638294"},{"rank":32,"date":"2024-05-14","month":"2024-05","author":"neonjunesis","followers":157200,"views":20300,"engagement":0.0777,"vpf":0.13,"duration":27,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore","#fyp","#outfitideas"],"archetype":"GRWM / styling","caption":"sairia assim de boa e vcs 💜 (menos pra aula de ballet jkkk) #outfitideas #balletcore #fyp","url":"https://www.tiktok.com/@neonjunesis/video/7368982009558977797"},{"rank":33,"date":"2022-12-02","month":"2022-12","author":"demidiamandis","followers":246300,"views":32000,"engagement":0.0573,"vpf":0.13,"duration":15,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#outfitinspo","#winteroutfit","#winteroutfits"],"archetype":"GRWM / styling","caption":"Which look is your fave ? @Los Angeles Apparel #outfitinspo #winteroutfits #winteroutfit #balletcore","url":"https://www.tiktok.com/@demidiamandis/video/7172673424131919150"},{"rank":34,"date":"2026-04-07","month":"2026-04","author":"dia.bia.mantequilla","followers":419,"views":7856,"engagement":0.0583,"vpf":18.75,"duration":40,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#balletoutfit","#ballettok","#pointeshoes","#yumiko"],"archetype":"GRWM / styling","caption":"Style a leo with me!! #balletoutfit #yumiko #ballettok #balletcore #pointeshoes","url":"https://www.tiktok.com/@dia.bia.mantequilla/video/7626152285940223262","relevanceNow":58.3},{"rank":35,"date":"2025-09-04","month":"2025-09","author":"mirandaheavener","followers":9854,"views":14900,"engagement":0.0664,"vpf":1.51,"duration":27,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#adultballet","#ballet","#balletcore","#ootd"],"archetype":"GRWM / styling","caption":"from vintage Taco Bell t-shirt to 💕🩰🎀✨ #balletcore #ballet #adultballet #ootd","url":"https://www.tiktok.com/@mirandaheavener/video/7546071223508176183"},{"rank":36,"date":"2025-06-25","month":"2025-06","author":"pomegranategirllll","followers":2461,"views":112800,"engagement":0.1116,"vpf":45.84,"duration":11,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#balletoutfits","#pink","#prettygirls"],"archetype":"GRWM / styling","caption":"ballet fits>> #ballet #balletoutfits #balletcore #prettygirls #pink","url":"https://www.tiktok.com/@pomegranategirllll/video/7519963253573766455"},{"rank":37,"date":"2023-03-28","month":"2023-03","author":"jennifermika_","followers":1100000,"views":534800,"engagement":0.1231,"vpf":0.49,"duration":15,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":[],"archetype":"General balletcore","caption":"Was i late or on time lets guess","url":"https://www.tiktok.com/@jennifermika_/video/7215696783849180458"},{"rank":38,"date":"2023-05-11","month":"2023-05","author":"lichi","followers":902800,"views":28900,"engagement":0.0402,"vpf":0.03,"duration":8,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":[],"archetype":"GRWM / styling","caption":"Would you wear this outfit?🍨💫","url":"https://www.tiktok.com/@lichi/video/7231973332747291912"},{"rank":39,"date":"2022-03-04","month":"2022-03","author":"moeblackx","followers":143800,"views":34000,"engagement":0.173,"vpf":0.24,"duration":11,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ad","#balletcore","#ballettiktok","#coquette"],"archetype":"GRWM / styling","caption":"#ad i’m obsessed with this trend so here’s a fit that doesn’t involve wearing a child’s uniform 🤪 #balletcore #ballettiktok #coquette","url":"https://www.tiktok.com/@moeblackx/video/7071310174962601258"},{"rank":40,"date":"2026-03-26","month":"2026-03","author":"vxvll1","followers":5949,"views":3383,"engagement":0.0727,"vpf":0.57,"duration":14,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#fashioninspo","#outfit","#style"],"archetype":"GRWM / styling","caption":"🩰🎀🦢 #balletcore #ballet #outfit #style #fashioninspo","url":"https://www.tiktok.com/@vxvll1/video/7621681727685119239"},{"rank":41,"date":"2026-04-20","month":"2026-04","author":"miaissandy","followers":7252,"views":512,"engagement":0.0859,"vpf":0.07,"duration":46,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#barre","#dancer","#gymgirl"],"archetype":"Classwear / rehearsal","caption":"Barre time 🩰  #dancer #ballet #barre #balletcore #gymgirl","url":"https://www.tiktok.com/@miaissandy/video/7630982119438798094","relevanceNow":58.1},{"rank":42,"date":"2023-04-15","month":"2023-04","author":"lichi","followers":902800,"views":186900,"engagement":0.0583,"vpf":0.21,"duration":10,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":[],"archetype":"Aesthetic / moodboard","caption":"Balletcore aesthetic🤍🩰🎧⭐️🦢","url":"https://www.tiktok.com/@lichi/video/7222237119706680578"},{"rank":43,"date":"2024-10-22","month":"2024-10","author":"omgulsc","followers":2511,"views":5536,"engagement":0.0262,"vpf":2.2,"duration":50,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballerina","#balletcore","#fashion","#outfitinspo"],"archetype":"GRWM / styling","caption":"from elle fanning to natalie portman, ballet core is the cutest fashion style! the best ballerinas in the world have the best style! here are our favs for your next ballet class or","url":"https://www.tiktok.com/@omgulsc/video/7428427990972779818"},{"rank":44,"date":"2025-12-30","month":"2025-12","author":"balletblondie","followers":607300,"views":1500000,"engagement":0.0729,"vpf":2.47,"duration":104,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#1","#balletcore","#ballettok","#barre","#makcore"],"archetype":"Classwear / rehearsal","caption":"Miss her yelling “mak” tho 🙂‍↔️ #ballettok #barre #balletcore #makcore","url":"https://www.tiktok.com/@balletblondie/video/7589798540457577742"},{"rank":45,"date":"2024-01-27","month":"2024-01","author":"becuhmarie","followers":7928,"views":56800,"engagement":0.0574,"vpf":7.16,"duration":55,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#adultbeginnerballet","#bodypositivity","#plussize","#plussizeballerina","#plussizeballet","#plussizeballetcore","#plussizeedition","#plussizefitness"],"archetype":"GRWM / styling","caption":"the socks really made the outfit 🎀🩰#plussize #plussizeedition #plussizeballetcore #plussizeballerina #adultbeginnerballet #plussizeballet #bodypositivity #plussizefitness","url":"https://www.tiktok.com/@becuhmarie/video/7328857482762276142"},{"rank":46,"date":"2026-02-10","month":"2026-02","author":"riannatalento","followers":46500,"views":433700,"engagement":0.0931,"vpf":9.33,"duration":90,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#1","#2","#3","#4","#5","#6","#ballerina","#ballet"],"archetype":"GRWM / styling","caption":"ALL of the outfits I go through in ballet class 😅🩰 @Eleve Dancewear #ballet #ballerina #ballettok #pointeshoes #balletcore","url":"https://www.tiktok.com/@riannatalento/video/7605241679414643998"},{"rank":47,"date":"2023-12-07","month":"2023-12","author":"mmmcl0thes","followers":75300,"views":44700,"engagement":0.1145,"vpf":0.59,"duration":15,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#aesthetic","#balletcore","#balletcoreaesthetic","#balletoutfit","#balletoutfitinspo","#clothing","#coquette","#coquetteaesthetic"],"archetype":"GRWM / styling","caption":"#balletcore #balletcoreaesthetic #balletoutfit #balletoutfitinspo #fyp #foryou #aesthetic #coquette #coquetteaesthetic #coquettefashioninspo #mmmcl0thes #fashion #fashiontiktok #wi","url":"https://www.tiktok.com/@mmmcl0thes/video/7309972148171427078"},{"rank":48,"date":"2024-05-28","month":"2024-05","author":"thewolfinlace","followers":178000,"views":33200,"engagement":0.1071,"vpf":0.19,"duration":88,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#balletcore","#darkaesthetic","#goth","#gothic","#gothicfashion","#gothicstyle","#greenscreen","#style"],"archetype":"GRWM / styling","caption":"#greenscreen Gothic Balletcore as requested by @Jess Coy 🕯️ ft. @MY MUM MADE IT , @Anthropologie @Marcella NYC @BlackMilk Clothing @Free People #gothic #goth #balletcore #gothicfas","url":"https://www.tiktok.com/@thewolfinlace/video/7374139466589687086"},{"rank":49,"date":"2025-02-14","month":"2025-02","author":"grandprixdance","followers":34700,"views":159700,"engagement":0.0709,"vpf":4.6,"duration":13,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balanchine","#ballerina","#ballerinacheck","#ballerinasoftiktok","#ballet","#balletclass","#balletcore","#balletdancer"],"archetype":"GRWM / styling","caption":"Our girl @karolee_nuh doing some Balanchine today!  All clothing and accessories available at grandprixdance.com  . . . . . #pointe #ballet #ballerina #balletdancer #dance #dancer ","url":"https://www.tiktok.com/@grandprixdance/video/7471354261016890670"},{"rank":50,"date":"2024-03-31","month":"2024-03","author":"sugarpllumfairy","followers":23800,"views":3516,"engagement":0.0557,"vpf":0.15,"duration":10,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#coquette","#girlblogger","#lanadelrey","#vintage"],"archetype":"GRWM / styling","caption":"ballet inspired outfit inspo🎀🦢☕️🩰🏹#coquette #lanadelrey #balletcore #vintage #girlblogger","url":"https://www.tiktok.com/@sugarpllumfairy/video/7352656676660579626"},{"rank":51,"date":"2024-09-21","month":"2024-09","author":"voguemagazine","followers":8500000,"views":376000,"engagement":0.1384,"vpf":0.04,"duration":15,"sentiment":"neutral","originalAudio":1,"verified":1,"hashtags":["#balletcore","#ferregamo","#milanfashionweek"],"archetype":"General balletcore","caption":"#Balletcore is coming back this spring according to #Ferregamo’s spring 2025 show at #MilanFashionWeek.","url":"https://www.tiktok.com/@voguemagazine/video/7417132571395411243"},{"rank":52,"date":"2023-07-09","month":"2023-07","author":"jenniferbenii","followers":173,"views":495,"engagement":0.1596,"vpf":2.86,"duration":14,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcoreaesthetic","#fashiontok","#foryou","#fypシ","#outfitideas","#outfitinspiration","#pinterestaesthetic","#viraltiktok"],"archetype":"GRWM / styling","caption":"i think i like the last one the most :) #fypシ #viraltiktok #outfitideas #outfitinspiration #pinterestaesthetic #balletcoreaesthetic #fashiontok #foryou","url":"https://www.tiktok.com/@jenniferbenii/video/7253860612680240430"},{"rank":53,"date":"2026-01-12","month":"2026-01","author":"mirandaheavener","followers":9854,"views":11300,"engagement":0.0714,"vpf":1.15,"duration":12,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#adultballet","#ballet","#balletclass","#balletcore"],"archetype":"Classwear / rehearsal","caption":"babies first yumiko leotard #ballet #adultballet #balletclass #balletcore","url":"https://www.tiktok.com/@mirandaheavener/video/7594494411405413687"},{"rank":54,"date":"2024-06-24","month":"2024-06","author":"baldkibum","followers":58400,"views":793,"engagement":0.1248,"vpf":0.01,"duration":24,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore","#fashion","#fitcheck","#fyp","#outfit","#outfitideas","#styleinspo"],"archetype":"GRWM / styling","caption":"My mom said the top reminds her of a ballerina so thats what inspired me lol #outfit #outfitideas #fitcheck #fyp #styleinspo #fashion #balletcore","url":"https://www.tiktok.com/@baldkibum/video/7384161747000708394"},{"rank":55,"date":"2026-04-18","month":"2026-04","author":"teigenbriony","followers":2495,"views":599,"engagement":0.1503,"vpf":0.24,"duration":18,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballerinacheck","#balletfashion","#bloomers","#springoutfits","#stylinginspo"],"archetype":"GRWM / styling","caption":"Outfit of the Day but it’s giving ‘Ballerina who bas lost her shoes’ 🩰✨ #stylinginspo #balletfashion #springoutfits #bloomers #ballerinacheck","url":"https://www.tiktok.com/@teigenbriony/video/7630073465680219414","relevanceNow":66.1},{"rank":56,"date":"2026-01-22","month":"2026-01","author":"alyssawelch_","followers":9199,"views":144300,"engagement":0.1333,"vpf":15.69,"duration":14,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#adamsandler","#ballet","#balletcore","#balletiktok","#balletoutfit"],"archetype":"GRWM / styling","caption":"Somebody help me idk #balletcore #adamsandler #balletoutfit #ballet #balletiktok","url":"https://www.tiktok.com/@alyssawelch_/video/7597988109820693815"},{"rank":57,"date":"2026-04-18","month":"2026-04","author":"xopinkyjos","followers":4444,"views":898,"engagement":0.0802,"vpf":0.2,"duration":27,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballerinasoftiktok","#ballet","#balletcore","#ballettok","#pinkaesthetic"],"archetype":"Performance / technique","caption":"such beautiful #balletcore pieces from SEEMEAND! @ seemeand.official on instagram🤍🩰 #ballet #pinkaesthetic #ballerinasoftiktok #ballettok","url":"https://www.tiktok.com/@xopinkyjos/video/7630138137540349197","relevanceNow":53.8},{"rank":58,"date":"2025-01-12","month":"2025-01","author":"daniellezarb91","followers":4413,"views":288100,"engagement":0.0531,"vpf":65.28,"duration":15,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#balletcore","#dancersoftiktok","#fyp","#grwm","#outfit"],"archetype":"GRWM / styling","caption":"Beginners ballet here I come 🩰😬 Wish me luck 🤣 #fyp #ballet #balletcore #dancersoftiktok #grwm #outfit #ballerina","url":"https://www.tiktok.com/@daniellezarb91/video/7459006967839870241"},{"rank":59,"date":"2023-11-14","month":"2023-11","author":"lindaknguyen","followers":54700,"views":6800000,"engagement":0.0982,"vpf":124.31,"duration":8,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#balletcore","#fyp","#ootd"],"archetype":"GRWM / styling","caption":"Balletcore 🩰🎀🩷 #fyp #ootd #balletcore","url":"https://www.tiktok.com/@lindaknguyen/video/7301129187463613739"},{"rank":60,"date":"2026-01-15","month":"2026-01","author":"itsnicooooole","followers":8166,"views":13000,"engagement":0.0989,"vpf":1.59,"duration":16,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#balletcore","#queerballetdancer"],"archetype":"GRWM / styling","caption":"Things I actually wear to class (sometimes it’s more femme, sometimes it’s more masc) and yes the tattoos are part of the fit #ballerina #balletcore #queerballetdancer","url":"https://www.tiktok.com/@itsnicooooole/video/7595625416614841614"},{"rank":61,"date":"2026-04-21","month":"2026-04","author":"defleahppard","followers":1094,"views":283,"engagement":0.1837,"vpf":0.26,"duration":51,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#alternative","#alttok","#goth","#gothic","#gothtok"],"archetype":"GRWM / styling","caption":"GRWM soft goth Pinterest edition 🖤 the person who posted this is not the creator sooo I can’t tag them 😭  @Foxblood Shop  🖤 Juliet lounge shorts  🖤 chained cardigan  @Free People l","url":"https://www.tiktok.com/@defleahppard/video/7631212114203381023","relevanceNow":69.6},{"rank":62,"date":"2026-04-18","month":"2026-04","author":"miley_the_ballerina","followers":8645,"views":152300,"engagement":0.2034,"vpf":17.62,"duration":11,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#ballet","#dancer","#outfit","#transition","#viral"],"archetype":"GRWM / styling","caption":"Hate this variation grrr #ballet #dancer #outfit #transition #viral","url":"https://www.tiktok.com/@miley_the_ballerina/video/7629957523008802079","relevanceNow":80.0},{"rank":63,"date":"2026-04-19","month":"2026-04","author":"ballerina.keira","followers":299300,"views":6012,"engagement":0.1267,"vpf":0.02,"duration":10,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#balletoutfit","#dancer","#pointeshoes"],"archetype":"GRWM / styling","caption":"quiet studio session 🩰🪽 - leotard @ballessimo skirt @Typha  pointe shoes @BLOCH Dance  - #ballerina #ballet #pointeshoes #dancer #balletoutfit","url":"https://www.tiktok.com/@ballerina.keira/video/7630518433892814102","relevanceNow":62.9},{"rank":64,"date":"2025-12-04","month":"2025-12","author":"balletblondie","followers":607300,"views":23200000,"engagement":0.0778,"vpf":38.2,"duration":130,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#balletcore","#ballettok","#barre"],"archetype":"Classwear / rehearsal","caption":"I went from hugging them to throwing them under the bus💀😭 @Ms. Victoria @victoria #ballettok #balletcore #barre","url":"https://www.tiktok.com/@balletblondie/video/7579863857812835598"},{"rank":65,"date":"2026-04-21","month":"2026-04","author":"user4734813655197","followers":79,"views":376,"engagement":0.1064,"vpf":4.76,"duration":13,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#ballethaul","#haul","#leotard"],"archetype":"GRWM / styling","caption":"i can’t wait to make outfits with my new leotards :) #ballet #ballethaul #balletcore #leotard #haul","url":"https://www.tiktok.com/@user4734813655197/video/7631072211624873230","relevanceNow":55.4},{"rank":66,"date":"2026-04-01","month":"2026-04","author":"michalinabalerina","followers":1387,"views":30900,"engagement":0.1057,"vpf":22.28,"duration":10,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#aprilfools","#balletcore","#balletlife","#ballettiktok","#blochyoungartist2026"],"archetype":"GRWM / styling","caption":"April Fools but make it ballet core with full outfit of @BLOCH Dance !  @Ig:mixt.xy  #aprilfools #ballettiktok #balletlife #balletcore #blochyoungartist2026","url":"https://www.tiktok.com/@michalinabalerina/video/7623705708428610849","relevanceNow":60.5},{"rank":67,"date":"2023-04-03","month":"2023-04","author":"galinarkhi","followers":16200,"views":14300,"engagement":0.0971,"vpf":0.88,"duration":7,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#baletcore","#fitcheck","#minimalstyle","#outfitideas"],"archetype":"GRWM / styling","caption":"what do we think? made it my way – mostly black 🤭 #fitcheck #baletcore #outfitideas #minimalstyle","url":"https://www.tiktok.com/@galinarkhi/video/7217619308460068102"},{"rank":68,"date":"2023-08-23","month":"2023-08","author":"imperfectpointes","followers":17700,"views":2453,"engagement":0.0746,"vpf":0.14,"duration":21,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":[],"archetype":"Classwear / rehearsal","caption":"The Tuscany Zip leotard 🤌🏻","url":"https://www.tiktok.com/@imperfectpointes/video/7270613352286539041"},{"rank":69,"date":"2026-04-17","month":"2026-04","author":"balletblondie","followers":607300,"views":273100,"engagement":0.1366,"vpf":0.45,"duration":162,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#ballettok","#diy","#makcore"],"archetype":"General balletcore","caption":"Creative expression through ballet core ✨ sorry @Ms. Victoria but I think we all can agree it’s cuter dis way😎 #ballettok #balletcore #diy","url":"https://www.tiktok.com/@balletblondie/video/7629359609358093582","relevanceNow":67.9},{"rank":70,"date":"2026-04-18","month":"2026-04","author":"ballerina.keira","followers":299300,"views":115300,"engagement":0.1369,"vpf":0.39,"duration":10,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#balletoutfit","#wearingvstyling"],"archetype":"GRWM / styling","caption":"this trend but balletfied 🤭🩰 - leotard @YUMIKO  shirt & lace top @Typha  leg warmers @RubiaWear  ballet flats @BLOCH Dance  warm up boots @repetto  - #ballerina #balletoutfit #wear","url":"https://www.tiktok.com/@ballerina.keira/video/7630147015363661078","relevanceNow":66.6},{"rank":71,"date":"2026-04-21","month":"2026-04","author":"flydanceind","followers":1131,"views":660,"engagement":0.0955,"vpf":0.58,"duration":15,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletaesthetic","#balletcore","#balletvibes","#danceoutfit"],"archetype":"GRWM / styling","caption":"Ballet vibes only 🩰✨ outfits que se sienten tan lindos como bailar! . . . . #BalletVibes #BalletCore #BalletAesthetic #DanceOutfit","url":"https://www.tiktok.com/@flydanceind/video/7631207089049799954","relevanceNow":52.7},{"rank":72,"date":"2023-07-17","month":"2023-07","author":"abby46602","followers":15,"views":338,"engagement":0.0858,"vpf":22.53,"duration":13,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballet","#clothes","#dress","#fyp","#ootd","#outfit","#outfitideas","#outfitinspo"],"archetype":"GRWM / styling","caption":"Get dressed with me 🩷#fyp #outfit #summer2023 #outfitinspo #ootd #outfitideas #clothes #dress #ballet","url":"https://www.tiktok.com/@abby46602/video/7256680634519883054"},{"rank":73,"date":"2024-08-08","month":"2024-08","author":"ashlynnrudzinski","followers":536300,"views":31800,"engagement":0.0245,"vpf":0.06,"duration":66,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":[],"archetype":"GRWM / styling","caption":"turns out I like the ballerina core outfits 🩰","url":"https://www.tiktok.com/@ashlynnrudzinski/video/7400817047896329518"},{"rank":74,"date":"2025-01-26","month":"2025-01","author":"slatesblog","followers":202,"views":151800,"engagement":0.1472,"vpf":751.49,"duration":7,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballerinasoftiktok","#ballet","#balletcore","#balletdancer","#ballettok","#blockette","#blockettecore"],"archetype":"GRWM / styling","caption":"#pinterest #fyp #ballet #balletdancer #ballettok #balletcore #ballerina #ballerinasoftiktok #trend #microtrend #coquette #coquettefashion #coquetteaesthetic #blockette #blocketteco","url":"https://www.tiktok.com/@slatesblog/video/7464359176001637654"},{"rank":75,"date":"2026-04-15","month":"2026-04","author":"heymissteacher","followers":2200000,"views":1100000,"engagement":0.0746,"vpf":0.5,"duration":26,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#koikub","#miniakirt","#styleinspo"],"archetype":"GRWM / styling","caption":"Let’s style my @KOI micro skirt w/ my badass ballet flats for work 🍎 #koikub #styleinspo #miniakirt","url":"https://www.tiktok.com/@heymissteacher/video/7629084146681269518","relevanceNow":57.3},{"rank":76,"date":"2023-11-08","month":"2023-11","author":"isabellemathers","followers":915700,"views":495000,"engagement":0.0408,"vpf":0.54,"duration":8,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":[],"archetype":"General balletcore","caption":"collection online now @csb 🩰🤍","url":"https://www.tiktok.com/@isabellemathers/video/7299044288841747714"},{"rank":77,"date":"2023-09-04","month":"2023-09","author":"mikaylageier","followers":596500,"views":1600000,"engagement":0.0927,"vpf":2.68,"duration":48,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballerinacheck","#ballerinasoftiktok","#ballet","#balletcore","#balletdancer","#balletoutfit","#ballettok"],"archetype":"GRWM / styling","caption":"Replying to @overratedbanana the fit in action #ballet #balletdancer #balletcore #balletoutfit #ballettok #ballerinacheck #ballerinasoftiktok","url":"https://www.tiktok.com/@mikaylageier/video/7274832549090757930"},{"rank":78,"date":"2026-02-25","month":"2026-02","author":"hey.its.tz","followers":49300,"views":350500,"engagement":0.2198,"vpf":7.11,"duration":19,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#outfitinspo","#plussizeoutfitideas","#whimsy"],"archetype":"GRWM / styling","caption":"THE cutest & most comfortable set I’ve ever owned 😝💗 thank you @Strawberry Western !!!  #outfitinspo #balletcore #whimsy #plussizeoutfitideas","url":"https://www.tiktok.com/@hey.its.tz/video/7610937988624682253"},{"rank":79,"date":"2026-02-14","month":"2026-02","author":"juliannabarrus","followers":1709,"views":15400,"engagement":0.0967,"vpf":9.01,"duration":16,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballerina","#ballet","#balletcore","#ballettok","#ootw"],"archetype":"GRWM / styling","caption":"a week of outfits as a professional ballet dancer 🩰#ballet #ballettok #ballerina #ootw #balletcore","url":"https://www.tiktok.com/@juliannabarrus/video/7606519992980442381"},{"rank":80,"date":"2025-07-04","month":"2025-07","author":"tightsunder","followers":132300,"views":370400,"engagement":0.0291,"vpf":2.8,"duration":33,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletclass","#balletclassoutfit","#balletcore","#balletcoreoutfit","#balletdancer","#balletoutfit","#balletoutfitinspo"],"archetype":"GRWM / styling","caption":"A slow grwm for rehearsal😌☔️ #fyp #foryou #foryoupage #ballet #ballettok #balletdancer #balletcore #balletclass #balletclassoutfit #balletcoreoutfit #balletoutfit #balletoutfitinsp","url":"https://www.tiktok.com/@tightsunder/video/7523072604589034782"},{"rank":81,"date":"2026-02-05","month":"2026-02","author":"veilandaltar","followers":43400,"views":8703,"engagement":0.0739,"vpf":0.2,"duration":20,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":[],"archetype":"General balletcore","caption":"How do you gothify your non goth hobbies?","url":"https://www.tiktok.com/@veilandaltar/video/7603458624114920717"},{"rank":82,"date":"2026-03-08","month":"2026-03","author":"sophie.mercure4","followers":490,"views":4363,"engagement":0.047,"vpf":8.9,"duration":15,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#dancer","#danceteacher","#dancewear"],"archetype":"GRWM / styling","caption":"For many they think ballet core is pastels and matching outfits but in the dance world, ballet pink is only worn by those under 10 or adult beginners that don’t know. This punk shr","url":"https://www.tiktok.com/@sophie.mercure4/video/7614862041643339038"},{"rank":83,"date":"2023-04-12","month":"2023-04","author":"dottie_store","followers":92200,"views":40200,"engagement":0.0176,"vpf":0.44,"duration":19,"sentiment":"neutral","originalAudio":0,"verified":1,"hashtags":["#foryou","#foryoupage","#fypシ","#muataitiktokshop","#ootd","#phoidoxinh"],"archetype":"GRWM / styling","caption":"Ballet-core Outfits idea check ✨🩰🎀 #foryou #foryoupage #fypシ #phoidoxinh #ootd #muataitiktokshop","url":"https://www.tiktok.com/@dottie_store/video/7221026797968837914"},{"rank":84,"date":"2024-11-04","month":"2024-11","author":"nat.alie.dances","followers":74200,"views":2400000,"engagement":0.0415,"vpf":32.35,"duration":23,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballerinasoftiktok","#balletclass","#balletcore","#balletdancer","#balletoutfit","#ballettiktok","#ballettok"],"archetype":"GRWM / styling","caption":"@aurora grace 🩰🤍 loves her cut off tights 🩰 #balletcore #ballettok #ballerinasoftiktok #cutofftights #balletclass #balletoutfit #ballerina #balletdancer #professionalballerina #bal","url":"https://www.tiktok.com/@nat.alie.dances/video/7433402279299992874"},{"rank":85,"date":"2023-01-06","month":"2023-01","author":"melyssamochi","followers":53200,"views":12200,"engagement":0.0661,"vpf":0.23,"duration":178,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#altfashion","#altoutfitideas","#balletcore","#darkaesthetic","#darkballetcoreaesthetic","#gothadjacent","#gothleisure","#miumiuballetflats"],"archetype":"GRWM / styling","caption":"Replying to @trystedthistle here are some inspiration images & where to shop for a dark balletcore aesthetic! #balletcore #darkballetcoreaesthetic #darkaesthetic #altfashion #gotha","url":"https://www.tiktok.com/@melyssamochi/video/7185633103254244654"},{"rank":86,"date":"2026-04-15","month":"2026-04","author":"farizasfits","followers":5650,"views":480,"engagement":0.0354,"vpf":0.08,"duration":7,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerinaaesthetic","#ballerinacore","#balletcore","#fashion","#outfitinspo"],"archetype":"GRWM / styling","caption":"#fashion #balletcore #ballerinaaesthetic #ballerinacore #outfitinspo","url":"https://www.tiktok.com/@farizasfits/video/7629056228387261709","relevanceNow":38.2},{"rank":87,"date":"2022-09-19","month":"2022-09","author":"bouvier.jeannee","followers":27700,"views":698300,"engagement":0.1429,"vpf":25.21,"duration":29,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletaesthetic","#balletcore","#balletoutfit","#balletoutfits","#danseuse","#danseuseclassique","#fyp"],"archetype":"GRWM / styling","caption":"It’s just for fun, just wear whatever you feel comfortable with ;) #ballet #fyp #fypシ #fypage #fypシ゚viral #howifeelaboutcertaindesignchoices #balletoutfits #balletaesthetic #ballet","url":"https://www.tiktok.com/@bouvier.jeannee/video/7145201633570426117"},{"rank":88,"date":"2023-02-02","month":"2023-02","author":"dcomumbc","followers":116,"views":447400,"engagement":0.0413,"vpf":3856.9,"duration":7,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballet","#balletcoreoutfit","#dance","#dancemajors","#greenscreen"],"archetype":"GRWM / styling","caption":"ballet core 🤩 #greenscreen #dance #dancemajors #ballet #balletcoreoutfit","url":"https://www.tiktok.com/@dcomumbc/video/7195600280170417450"},{"rank":89,"date":"2022-05-29","month":"2022-05","author":"martymoment","followers":92000,"views":16900,"engagement":0.113,"vpf":0.18,"duration":29,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballerinacore","#balletcore","#fashiontiktok"],"archetype":"Performance / technique","caption":"Dressing this way makes me feel so delicate 🩰💗 #ballerinacore #balletcore #fashiontiktok","url":"https://www.tiktok.com/@martymoment/video/7103217912411933998"},{"rank":90,"date":"2026-04-03","month":"2026-04","author":"imperfectpointes","followers":17700,"views":75700,"engagement":0.0419,"vpf":4.28,"duration":8,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#balletbrand","#balletcore","#balletoutfit","#ballettights","#imperfectpointes"],"archetype":"GRWM / styling","caption":"did someone say TRIPLE PIROUETTE from fifth 🩰 haters will say it’s ai generated 🤖  Fiona Lee of The Royal Danish Ballet wearing Imperfect Pointes ‘We Got Boobs’ leotard and NEW no ","url":"https://www.tiktok.com/@imperfectpointes/video/7624493775787724054","relevanceNow":44.6},{"rank":91,"date":"2026-03-26","month":"2026-03","author":"violademyan","followers":273300,"views":12100,"engagement":0.107,"vpf":0.04,"duration":86,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletflats","#coachellaoutfit","#coquettefashion","#fairycoreaesthetic","#festivalfashion"],"archetype":"GRWM / styling","caption":"coachella outfit inspiration fairycore outfit of the day coquette style festival inspired fashion styling ballet flats #festivalfashion #coachellaoutfit #fairycoreaesthetic #coquet","url":"https://www.tiktok.com/@violademyan/video/7621360959361158431"},{"rank":92,"date":"2025-08-15","month":"2025-08","author":"fathe.doks","followers":58000,"views":147500,"engagement":0.0377,"vpf":2.54,"duration":10,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletcore","#barre","#barreworkout","#pilates","#workoutoutfit"],"archetype":"GRWM / styling","caption":"Matching for Barre Class w/ @jahanararahman_ 🧘🏾‍♀️🎀🩰  #barre #barreworkout #pilates #balletcore #workoutoutfit","url":"https://www.tiktok.com/@fathe.doks/video/7538801249643138326"},{"rank":93,"date":"2025-12-18","month":"2025-12","author":"kenzieeecoleman","followers":20700,"views":16200,"engagement":0.0504,"vpf":0.78,"duration":19,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletoutfit","#honestopinion","#outfit","#outfitinspo"],"archetype":"GRWM / styling","caption":"BE HONEST. Do I look cute or like a FREAK?? #ballet #balletoutfit #outfit #outfitinspo #honestopinion","url":"https://www.tiktok.com/@kenzieeecoleman/video/7585286079075323166"},{"rank":94,"date":"2025-04-04","month":"2025-04","author":"pomegranategirllll","followers":2461,"views":46100,"engagement":0.1833,"vpf":18.73,"duration":12,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletoutfit"],"archetype":"GRWM / styling","caption":"#ballet #balletoutfit","url":"https://www.tiktok.com/@pomegranategirllll/video/7489268882700766510"},{"rank":95,"date":"2023-02-15","month":"2023-02","author":"elsastallings","followers":128200,"views":55900,"engagement":0.1447,"vpf":0.44,"duration":29,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#adamsandlercore"],"archetype":"General balletcore","caption":"Thank u @frozentitmilk for exposing the truth about balletcore!!! The dance community commends your bravery xo #adamsandlercore","url":"https://www.tiktok.com/@elsastallings/video/7200461155738373422"},{"rank":96,"date":"2026-02-26","month":"2026-02","author":"wannavbe","followers":210500,"views":12200,"engagement":0.0966,"vpf":0.06,"duration":20,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore","#buildanoutfit","#coquette","#cuteclothes","#grwmoutfit"],"archetype":"GRWM / styling","caption":"i tea: joxli.na #balletcore #coquette #cuteclothes #grwmoutfit #buildanoutfit","url":"https://www.tiktok.com/@wannavbe/video/7611020003973827848"},{"rank":97,"date":"2026-03-12","month":"2026-03","author":"ballerina.keira","followers":299300,"views":712900,"engagement":0.1627,"vpf":2.38,"duration":5,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#balletoutfit","#fyp","#turnout"],"archetype":"GRWM / styling","caption":"wearing the most gorgeous set from @BLOCH Dance new atlantis collection 🎀💫🪽 - #ballerina #ballet #balletoutfit #turnout #fyp","url":"https://www.tiktok.com/@ballerina.keira/video/7616431945194458390"},{"rank":98,"date":"2024-08-12","month":"2024-08","author":"belle_urwin","followers":328000,"views":2800000,"engagement":0.1022,"vpf":8.54,"duration":34,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#balletdancer","#ballettok","#fyp"],"archetype":"Performance / technique","caption":"oop don’t come for me 🫢 #fyp #ballerina #ballettok #balletdancer","url":"https://www.tiktok.com/@belle_urwin/video/7402226883145895175"},{"rank":99,"date":"2026-02-10","month":"2026-02","author":"erineminem","followers":51000,"views":45300,"engagement":0.1223,"vpf":0.89,"duration":26,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#ootd"],"archetype":"GRWM / styling","caption":"#ootd as a baby ballet teacher 🩰🤍 #ballet #balletcore @FIND ME NOW @Protémoa @capezio","url":"https://www.tiktok.com/@erineminem/video/7605102760480083213"},{"rank":100,"date":"2023-09-30","month":"2023-09","author":"bigsissaysso","followers":33200,"views":7494,"engagement":0.0129,"vpf":0.23,"duration":21,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#balletcore","#balletcoreaesthetic","#balletcorefashion","#balletcoreoutfits","#blackgirlluxury","#blackgirltiktok","#blacktiktok","#softlife"],"archetype":"GRWM / styling","caption":"ballet core outfits on black girls #balletcore #balletcoreaesthetic #balletcoreoutfits #balletcorefashion #softlife #softlifeaestheticblackgirl #blackgirlluxury #blackgirltiktok #b","url":"https://www.tiktok.com/@bigsissaysso/video/7284761620943768874"},{"rank":101,"date":"2025-12-13","month":"2025-12","author":"pie.does.ballet","followers":12500,"views":34900,"engagement":0.0523,"vpf":2.79,"duration":15,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballet","#ballettok","#fyp"],"archetype":"GRWM / styling","caption":"Grwm for ballet ballet warm ups ballet outfit ballet #ballettok #ballet #fyp","url":"https://www.tiktok.com/@pie.does.ballet/video/7583409145848630550"},{"rank":102,"date":"2026-01-21","month":"2026-01","author":"secret43636","followers":480,"views":597600,"engagement":0.1762,"vpf":1245.0,"duration":12,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#ballettok","#balletvibes","#gloomyvibes"],"archetype":"Aesthetic / moodboard","caption":"#balletvibes #ballettok #balletcore #gloomyvibes #ballet","url":"https://www.tiktok.com/@secret43636/video/7597940245010599190"},{"rank":103,"date":"2025-06-11","month":"2025-06","author":"zoe.b3an","followers":76500,"views":177900,"engagement":0.0647,"vpf":2.33,"duration":16,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#1dress3outfits","#acubi","#ballerinacappuccina","#balletcore","#fyp","#grwm","#ootd","#ootw"],"archetype":"GRWM / styling","caption":"1 dress, 3 outfits Ballerina Cappucina style 🩰☕️ #balletcore with a twist?  #ballerinacappuccina #1dress3outfits #outfitinspo #stylinspo #OOTD #ootw #grwm #whatiwore #outfit #acubi","url":"https://www.tiktok.com/@zoe.b3an/video/7514485579610967314"},{"rank":104,"date":"2026-04-16","month":"2026-04","author":"pinkmanami","followers":17800,"views":1044,"engagement":0.2261,"vpf":0.06,"duration":20,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#nana","#nanahachi","#pinkhaul","#rosa"],"archetype":"GRWM / styling","caption":"🎀🩰 Thank you @Angel Ruche  10% OFF: MANAMI ✨ LINKS ✨ Outfit 2 - https://angelruche.com/collections/new-arrivals/products/my-true-form-fawn-mid-rise-fur-mini-skirt (XS) - https://an","url":"https://www.tiktok.com/@pinkmanami/video/7629492379682196756","relevanceNow":63.6},{"rank":105,"date":"2024-12-12","month":"2024-12","author":"pmphilippi","followers":18100,"views":2900000,"engagement":0.0192,"vpf":160.22,"duration":8,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#exercere","#fashion","#fyp","#girlies","#gym","#gymoutfit"],"archetype":"GRWM / styling","caption":"Ballerina gym set #ballerina #gym #london #ootd #outfitinspo #fashion #exercere #gymoutfit #pink #ballet #reformer #strawberry #pilates #workout #teamwork #letsgo #fyp #girlies 🩰✨🤍","url":"https://www.tiktok.com/@pmphilippi/video/7447454480565570838"},{"rank":106,"date":"2026-03-03","month":"2026-03","author":"imperfectpointes","followers":17700,"views":141900,"engagement":0.1134,"vpf":8.02,"duration":7,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#balletbrand","#balletcore","#balletdancer","#balletoutfit","#sustainabledancewear"],"archetype":"GRWM / styling","caption":"a moment for the haul 🤝🩰 #balletcore #sustainabledancewear #balletdancer #balletbrand #balletoutfit","url":"https://www.tiktok.com/@imperfectpointes/video/7612972709190061315"},{"rank":107,"date":"2023-09-22","month":"2023-09","author":"mikaylageier","followers":596500,"views":139800,"engagement":0.0943,"vpf":0.23,"duration":120,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballerinasoftiktok","#ballet","#balletclass","#balletcore","#balletoutfit","#grwmforballet","#grwmforballetclass"],"archetype":"GRWM / styling","caption":"Today was a rough one #ballet #grwmforballet #ballerina #ballerinasoftiktok #grwmforballetclass #balletclass #balletoutfit #balletcore","url":"https://www.tiktok.com/@mikaylageier/video/7281792872804846878"},{"rank":108,"date":"2026-01-09","month":"2026-01","author":"belle_urwin","followers":328000,"views":63100,"engagement":0.0675,"vpf":0.19,"duration":27,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#balletcore","#balletfashion","#ballettok"],"archetype":"GRWM / styling","caption":"my prediction is ballet tights are out and crop top and booty shorts are in 😎 (well that’s what I’ll be wearing anyway) #ballerina #balletcore #ballettok #balletfashion","url":"https://www.tiktok.com/@belle_urwin/video/7593230603865115911"},{"rank":109,"date":"2026-03-21","month":"2026-03","author":"h3llokalei","followers":2648,"views":1905,"engagement":0.1318,"vpf":0.72,"duration":9,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#balletcore","#fyp"],"archetype":"GRWM / styling","caption":"here’s my gym outfit I’m feeling very balletcore today, also I thrifted these Lulu capris and the bolero 🤭 #fyp #balletcore","url":"https://www.tiktok.com/@h3llokalei/video/7619811257297767711"},{"rank":110,"date":"2024-07-17","month":"2024-07","author":"geliliu_uu","followers":460500,"views":713700,"engagement":0.1435,"vpf":1.55,"duration":75,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletaesthetic","#balletcore","#beautyroutine","#coquette","#coquetteaesthetic","#foryou","#girlyoutfit","#girlythings"],"archetype":"GRWM / styling","caption":"Pink Ballet Aesthetics🩰🎀✨ #morningroutine #pinkaesthetic #grwm  #coquette #coquetteaesthetic #pinktok  #girlythings #thatgirl #thatgirlaesthetic  #beautyroutine #lifestyle #girlyou","url":"https://www.tiktok.com/@geliliu_uu/video/7392542973159853344"},{"rank":111,"date":"2024-08-29","month":"2024-08","author":"christine.elizabethxo","followers":55600,"views":892000,"engagement":0.2,"vpf":16.04,"duration":17,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore","#coquetteaesthetic","#coquettecore","#dollette","#fairycore","#girlytok","#mlp","#ootd"],"archetype":"GRWM / styling","caption":"Silly little outfit of the day 💗💛💙 Pinkie Pie was my inspo, what do you think? 💗🫶✨ also I know the shoes dont match exactly lol, but they’re the ones I wanted to use 🤷‍♀️😂😅 . . . .","url":"https://www.tiktok.com/@christine.elizabethxo/video/7408655790145309995"},{"rank":112,"date":"2023-03-14","month":"2023-03","author":"an_maslova","followers":43000,"views":19600,"engagement":0.0331,"vpf":0.46,"duration":16,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#amazon","#amazonclothes","#ballet","#balletaesthetic","#balletcore"],"archetype":"Aesthetic / moodboard","caption":"links in comments ✔️ #ballet #balletcore #balletaesthetic #amazon #amazonclothes","url":"https://www.tiktok.com/@an_maslova/video/7210507664751594754"},{"rank":113,"date":"2026-01-10","month":"2026-01","author":"balletblondie","followers":607300,"views":13300000,"engagement":0.098,"vpf":21.9,"duration":156,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#balletcore","#ballettok","#barre"],"archetype":"Classwear / rehearsal","caption":"Adhd core w a mix of Makcore #ballettok #balletcore #barre @Ms. Victoria @adidas","url":"https://www.tiktok.com/@balletblondie/video/7593798936675077431"},{"rank":114,"date":"2025-04-01","month":"2025-04","author":"belle_urwin","followers":328000,"views":33300,"engagement":0.0507,"vpf":0.1,"duration":7,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballerina","#balletcore","#ballettok"],"archetype":"Performance / technique","caption":"another day another slay 🦋🐬🧞‍♂️ #balletcore #ballerina #ballettok","url":"https://www.tiktok.com/@belle_urwin/video/7488355432994589960"},{"rank":115,"date":"2023-05-02","month":"2023-05","author":"aliyahsinterlude","followers":2900000,"views":109700,"engagement":0.1646,"vpf":0.04,"duration":137,"sentiment":"positive","originalAudio":1,"verified":1,"hashtags":["#aliyahcore","#balletcore","#fyp"],"archetype":"GRWM / styling","caption":"I LUVVV THIS OUTFIT YALL OMG😭😭💖💞🩰🩰🩷 RIBBONCORE FOR THE WIN ! #fyp #aliyahcore #balletcore","url":"https://www.tiktok.com/@aliyahsinterlude/video/7228710129099803950"},{"rank":116,"date":"2023-09-11","month":"2023-09","author":"n0tgr4ciee","followers":39500,"views":233000,"engagement":0.0604,"vpf":5.9,"duration":10,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcoreaesthetic","#balletcoreoutfit","#coquetteaesthetic","#coquettefashion","#fashiontiktok","#outfitideas","#outfitinspo","#styleinspo"],"archetype":"GRWM / styling","caption":"i love being a girly girl sometimes 🩰 ౨ৎ ⋆｡˚ which aesthetic should i try next? #balletcoreaesthetic #balletcoreoutfit #coquetteaesthetic #coquettefashion #outfitideas #outfitinspo","url":"https://www.tiktok.com/@n0tgr4ciee/video/7277398868122209554"},{"rank":117,"date":"2025-10-22","month":"2025-10","author":"nataliireynoldss","followers":6800000,"views":13900000,"engagement":0.0542,"vpf":2.04,"duration":22,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballerina","#ballet","#balletcore","#nataliereynolds","#pointeshoes"],"archetype":"Performance / technique","caption":"I’m always surprised what people think is going on inside these shoes… #ballet #pointeshoes #ballerina #balletcore #nataliereynolds","url":"https://www.tiktok.com/@nataliireynoldss/video/7564137781627260191"},{"rank":118,"date":"2024-11-25","month":"2024-11","author":"giborish","followers":2111,"views":87300,"engagement":0.016,"vpf":41.35,"duration":8,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballet","#balletclassoutfit","#balletcore","#balletdancer","#ballettok","#getreadywithme","#la","#losangeles"],"archetype":"GRWM / styling","caption":"Get ready with me for Mondays ballet classes 💞🩰   #getreadywithme #balletclassoutfit #ballet #losangeles #la #balletdancer #balletcore #ballettok","url":"https://www.tiktok.com/@giborish/video/7441362326231567658"},{"rank":119,"date":"2022-06-11","month":"2022-06","author":"martymoment","followers":92000,"views":12300,"engagement":0.1263,"vpf":0.13,"duration":39,"sentiment":"negative","originalAudio":0,"verified":0,"hashtags":["#aestheticseries","#ballerinacore","#balletcore","#fashiontiktok"],"archetype":"Performance / technique","caption":"Lazy of this series for now 🩰🎀✨ #ballerinacore #balletcore #fashiontiktok #aestheticseries","url":"https://www.tiktok.com/@martymoment/video/7107812091746061610"},{"rank":120,"date":"2025-02-05","month":"2025-02","author":"hayleyballerina","followers":8586,"views":38500,"engagement":0.0523,"vpf":4.48,"duration":55,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballerina","#ballet","#balletclass","#balletcore","#balletdancer","#ballettok","#fitcheck"],"archetype":"GRWM / styling","caption":"loveee all fun outfit changes at barre extra cozy since it’s winter! how many layers do you wear? @Eleve Dancewear @MoveDance @Suffolk Dance @Apolla Socks @target #balletdancer #ba","url":"https://www.tiktok.com/@hayleyballerina/video/7467816514498907438"},{"rank":121,"date":"2025-04-04","month":"2025-04","author":"molliedaniela","followers":147400,"views":66200,"engagement":0.1877,"vpf":0.45,"duration":10,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#balletcore","#bodyneutrality","#bodypositivity","#fatpositive","#ootd","#pinkfashion","#pinkpinkpink"],"archetype":"GRWM / styling","caption":"Would never hate such a beautiful body 🎀🩰 #OOTD #plussizeootd #plussizefashion #plussizestyle #balletcore #ballerina #pinkpinkpink #pinkfashion #pinktok #pinktiktok #bodypositivity","url":"https://www.tiktok.com/@molliedaniela/video/7489558087267798314"},{"rank":122,"date":"2022-11-13","month":"2022-11","author":"fionafanning","followers":64000,"views":15300,"engagement":0.0727,"vpf":0.24,"duration":11,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletaesthetic","#balletcore","#balletcoreaesthetic","#balletcoreoutfit","#coquette","#coquetteaesthetic","#coquettecore","#coquetteoutfits"],"archetype":"GRWM / styling","caption":"balletcore outfit inspiration 🩰🤍 #balletcore #balletcoreaesthetic #balletcoreoutfit #balletaesthetic #coquette #coquettecore #coquetteoutfits #coquetteaesthetic #girlyoutfit #girly","url":"https://www.tiktok.com/@fionafanning/video/7165604950247116078"},{"rank":123,"date":"2026-01-27","month":"2026-01","author":"pie.does.ballet","followers":12500,"views":7977,"engagement":0.0901,"vpf":0.64,"duration":14,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballet","#ballettok","#fyp"],"archetype":"GRWM / styling","caption":"Finished ballet get ready with me to go home grwm ballet ballet outfit #fyp #ballet #ballettok","url":"https://www.tiktok.com/@pie.does.ballet/video/7600122446489849110"},{"rank":124,"date":"2022-12-05","month":"2022-12","author":"bohemianasoul","followers":4708,"views":319900,"engagement":0.2506,"vpf":67.95,"duration":13,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#balletcoreaesthetic","#curvytiktok","#fashion","#fyp","#plussize"],"archetype":"Aesthetic / moodboard","caption":"#balletcoreaesthetic #plussize #curvytiktok #fashion #fyp","url":"https://www.tiktok.com/@bohemianasoul/video/7173723735814360326"},{"rank":125,"date":"2026-03-21","month":"2026-03","author":"ballerinaattorney","followers":9926,"views":12300,"engagement":0.0615,"vpf":1.24,"duration":20,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#adultballet","#ballet","#balletclass","#balletcore","#balletleotard"],"archetype":"GRWM / styling","caption":"Another GRWM for adult ballet class in NYC. This time wearing something a little different as a ballet leotard #adultballet #balletleotard #balletclass #balletcore #ballet","url":"https://www.tiktok.com/@ballerinaattorney/video/7619706377434451214"},{"rank":126,"date":"2025-04-08","month":"2025-04","author":"luissmoolina","followers":77900,"views":860100,"engagement":0.1021,"vpf":11.04,"duration":101,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballerino","#balletclass","#balletcore","#balletdancer","#balletlife","#ballettiktok","#fypシ"],"archetype":"GRWM / styling","caption":"GRWM to suffer at the barre (but make it graceful) I wanna know what exercises do you absolutely hate?  . .  . . . . Full outfit, warmers and rosin by : @Só Dança #balletdancer  . ","url":"https://www.tiktok.com/@luissmoolina/video/7491064415467425070"},{"rank":127,"date":"2024-03-07","month":"2024-03","author":"mattiekn","followers":4281,"views":151300,"engagement":0.0233,"vpf":35.34,"duration":11,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore","#fashioninspo","#foryoupage","#fypシ","#nyc","#outfitinspo","#styleinspo","#vintagefashion"],"archetype":"GRWM / styling","caption":"so comfortable yet elegant 🤍 #fypシ #foryoupage #outfitinspo #styleinspo #fashioninspo #vintagefashion #balletcore #nyc","url":"https://www.tiktok.com/@mattiekn/video/7343447729772842286"},{"rank":128,"date":"2026-04-07","month":"2026-04","author":"balletblondie","followers":607300,"views":298800,"engagement":0.0994,"vpf":0.49,"duration":174,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#adhd","#balletcore","#ballettok","#grwm","#mediocreballerina","#typeb"],"archetype":"GRWM / styling","caption":"20 minute vid cut down to 3 of me chaotically trying to get my life together before ballet✨💅 @Olaplex @Not Your Mother's @TRESemmé @e.l.f. Cosmetics @NYX Professional Makeup @Maybe","url":"https://www.tiktok.com/@balletblondie/video/7626096700561657102","relevanceNow":47.2},{"rank":129,"date":"2023-04-02","month":"2023-04","author":"kiraelon","followers":257100,"views":28800,"engagement":0.2206,"vpf":0.11,"duration":33,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#balletcoreaesthetic","#balletcoreoutfit","#dancers","#fashion","#therealballetcore"],"archetype":"GRWM / styling","caption":"ballet coreeee🤪💞😮‍💨🩰🫨 #ballet #balletcore #balletcoreaesthetic #dancers #therealballetcore #balletcoreoutfit #fashion","url":"https://www.tiktok.com/@kiraelon/video/7217563288782114090"},{"rank":130,"date":"2024-11-16","month":"2024-11","author":"laurennnnn2.00","followers":3025,"views":15600,"engagement":0.0592,"vpf":5.16,"duration":32,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#balletcore","#balletcoreaesthetic","#balletfyp","#balletmodel","#balletoutfit","#blackballerina"],"archetype":"GRWM / styling","caption":"Some Saturday practice🍂🤎 . . Of course im wearing my new leg warmers and shorts from @BLOCH Dance  . . #ballet #ballerina #blochyoungartist #ukballerina #blackballerinas #professio","url":"https://www.tiktok.com/@laurennnnn2.00/video/7437795413823851809"},{"rank":131,"date":"2026-03-05","month":"2026-03","author":"kathryn.mueller","followers":138200,"views":51200,"engagement":0.0333,"vpf":0.37,"duration":156,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#nike","#nikeskims","#nikeskimsreview","#skims"],"archetype":"Haul / product","caption":"Replying to @. I had a few more pieces to chat about so here we go! NikeSKIMS ballet core x LISA part 2 5’9” ~145lbs 32DD 26” waist 38.5” hip #nike #skims #nikeskims #nikeskimsrevi","url":"https://www.tiktok.com/@kathryn.mueller/video/7613865139036572958"},{"rank":132,"date":"2026-03-20","month":"2026-03","author":"yanebailarina","followers":3828,"views":13900000,"engagement":0.0993,"vpf":3631.14,"duration":31,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#foryou","#fy"],"archetype":"General balletcore","caption":"Como diz meu professor Vagner “quer moleza? Vai pro crosfit” #fy #foryou #ballet","url":"https://www.tiktok.com/@yanebailarina/video/7619213032039664916"},{"rank":133,"date":"2024-10-31","month":"2024-10","author":"nat.alie.dances","followers":74200,"views":2100000,"engagement":0.1938,"vpf":28.3,"duration":6,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballerinasoftiktok","#ballet","#balletclass","#balletcore","#ballettiktok","#ballettok","#fyp"],"archetype":"Classwear / rehearsal","caption":"Happy halloween! #balletcore #ballerina #ballettok #halloweencostume #ballettiktok #ballet #lorax #thelorax #loraxcostume #ballerinasoftiktok #fyp #balletclass #halloween","url":"https://www.tiktok.com/@nat.alie.dances/video/7431995806544088362"},{"rank":134,"date":"2025-06-23","month":"2025-06","author":"mirosdavila","followers":22900,"views":10500,"engagement":0.0358,"vpf":0.46,"duration":72,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#adultballet","#balletclass","#balletclothes","#balletcoreoutfits","#ballettok","#beginnerballet"],"archetype":"GRWM / styling","caption":"If you are new to ballet and don’t know what brand to shop from @capezio is where I get most of my affordable dance wear. For leo’s I always size up. Also look at @Discount Dance f","url":"https://www.tiktok.com/@mirosdavila/video/7518943182722174239"},{"rank":135,"date":"2023-04-13","month":"2023-04","author":"ja.lw","followers":594700,"views":126200,"engagement":0.1589,"vpf":0.21,"duration":8,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#comedy","#funny"],"archetype":"Aesthetic / moodboard","caption":"pink everything? nah hulk shirt #ballet #balletcore #comedy #funny","url":"https://www.tiktok.com/@ja.lw/video/7221579627121085742"},{"rank":136,"date":"2026-02-02","month":"2026-02","author":"mackenziedaviz","followers":5000000,"views":603700,"engagement":0.1254,"vpf":0.12,"duration":119,"sentiment":"positive","originalAudio":0,"verified":1,"hashtags":["#ballerina","#ballet","#ballettok","#fashiontok","#shopping"],"archetype":"GRWM / styling","caption":"I’m tired of living in ballet clothes so come shopping with me lol 🥲🩰 #ballet #ballerina #ballettok #shopping #fashiontok @Anthropologie @American Eagle @Free People @Urban Outfitt","url":"https://www.tiktok.com/@mackenziedaviz/video/7602115819144826126"},{"rank":137,"date":"2026-01-31","month":"2026-01","author":"danielleshanes","followers":105200,"views":2500000,"engagement":0.1143,"vpf":23.76,"duration":13,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#balletclass","#girly","#pink"],"archetype":"Classwear / rehearsal","caption":"romanticizing being a beginner again 🩰🪽 #ballet #girly #balletclass #ballerina #pink","url":"https://www.tiktok.com/@danielleshanes/video/7601622442506849567"},{"rank":138,"date":"2023-03-07","month":"2023-03","author":"tessapeay","followers":3000000,"views":424000,"engagement":0.0499,"vpf":0.14,"duration":21,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#coquette","#fashiontiktok","#getreadywithme","#grwm","#lululemon","#lululemonlikenew","#matchingset"],"archetype":"GRWM / styling","caption":"I most definitely put cerave in my hair 😭💀 #grwm #fashiontiktok #getreadywithme #styleinspo #balletcore #springfashion #coquette #lululemon #lululemonlikenew #tessapeay #workoutout","url":"https://www.tiktok.com/@tessapeay/video/7207901332680936750"},{"rank":139,"date":"2026-04-14","month":"2026-04","author":"darinika_atelier","followers":116400,"views":2100000,"engagement":0.0471,"vpf":18.04,"duration":13,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballerina","#ballet","#handmade","#photoshot","#skirt"],"archetype":"Performance / technique","caption":"Handmade skirt) – a unique look for your photo shoot) To order, message me on Instagram – link in my profile description)  #skirt #photoshot #handmade #ballet #ballerina","url":"https://www.tiktok.com/@darinika_atelier/video/7628682222605700374","relevanceNow":37.7},{"rank":140,"date":"2025-09-02","month":"2025-09","author":"belle_urwin","followers":328000,"views":17000000,"engagement":0.1485,"vpf":51.83,"duration":8,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#balletcore","#ballettok","#runwaywalk"],"archetype":"Performance / technique","caption":"pointe shoes are more fun to strut in than heels 🤭  #ballerina #balletcore #ballettok #runwaywalk","url":"https://www.tiktok.com/@belle_urwin/video/7545453689280974088"},{"rank":141,"date":"2023-07-17","month":"2023-07","author":"melanie_fk","followers":1578,"views":678200,"engagement":0.0822,"vpf":429.78,"duration":40,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore","#balletoutfit","#ballettok","#beginnerballet","#djerfavenue","#startingballetin20s","#vancouver"],"archetype":"GRWM / styling","caption":"Taking my first ballet class in my 20s 🩰 #startingballetin20s #beginnerballet #balletcore #vancouver #djerfavenue #ballettok #balletoutfit","url":"https://www.tiktok.com/@melanie_fk/video/7256879985342811419"},{"rank":142,"date":"2025-10-27","month":"2025-10","author":"balletblondie","followers":607300,"views":2900000,"engagement":0.0896,"vpf":4.78,"duration":95,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#balletcore","#ballettok","#barre"],"archetype":"Classwear / rehearsal","caption":"I fight wars not only in the brain but in ballet @Ms. Victoria #ballettok #balletcore #barre","url":"https://www.tiktok.com/@balletblondie/video/7565703201073253687"},{"rank":143,"date":"2024-06-12","month":"2024-06","author":"amanda.rene","followers":64400,"views":256400,"engagement":0.2428,"vpf":3.98,"duration":108,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#balletcore"],"archetype":"Performance / technique","caption":"been a year since I’ve done one of these :)🩰☁️ #ballerina #balletcore","url":"https://www.tiktok.com/@amanda.rene/video/7379738167613836590"},{"rank":144,"date":"2025-10-13","month":"2025-10","author":"itstianakun","followers":782700,"views":14500000,"engagement":0.0271,"vpf":18.53,"duration":86,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#aliexpressfinds","#cuteoutfits","#jfashion","#pianoaesthetic","#pianocore"],"archetype":"GRWM / styling","caption":"Pianocore aliexpress haul🎹 I’ve been seeing this style all over my pinterest so I did some shopping🤭 Search [AY8JX8] to find all my recent buys🖤 Discount Codes: $3 off on orders ov","url":"https://www.tiktok.com/@itstianakun/video/7560768878427507991"},{"rank":145,"date":"2026-03-07","month":"2026-03","author":"becuhmarie","followers":7928,"views":15400,"engagement":0.0695,"vpf":1.94,"duration":21,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#adultballet","#adultbeginnerballet","#balletcore","#plussize","#skims"],"archetype":"General balletcore","caption":"i love this color #plussize #adultbeginnerballet #adultballet #balletcore #skims","url":"https://www.tiktok.com/@becuhmarie/video/7614635810016529694"},{"rank":146,"date":"2026-02-20","month":"2026-02","author":"baby.monimi","followers":21300,"views":8967,"engagement":0.1,"vpf":0.42,"duration":76,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletoutfit","#fyp","#motivation","#outfitinspiration","#whatiwore"],"archetype":"GRWM / styling","caption":"How many hobbies a girl can have?  I took ballet classes when I was 18, I don’t remember anything but I always wanted to do it again & here I am at 30 years old, a mom of 2 , findi","url":"https://www.tiktok.com/@baby.monimi/video/7609079777684671774"},{"rank":147,"date":"2025-09-14","month":"2025-09","author":"enpointepoetry","followers":9073,"views":38000,"engagement":0.1098,"vpf":4.19,"duration":18,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballet","#coquette","#grishko","#haul","#outfit","#vaganova"],"archetype":"GRWM / styling","caption":"And they fit so well 🦢  #ballet #grishko #haul #vaganova #coquette","url":"https://www.tiktok.com/@enpointepoetry/video/7549904295009766678"},{"rank":148,"date":"2024-07-07","month":"2024-07","author":"claudiadeanworld","followers":302800,"views":200500,"engagement":0.0515,"vpf":0.66,"duration":13,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletoutfits","#claudiadeancollections","#claudiadeanworld"],"archetype":"GRWM / styling","caption":"I would LIVE in unitards🤝🏼 #claudiadeancollections #balletoutfits #claudiadeanworld","url":"https://www.tiktok.com/@claudiadeanworld/video/7388680514091207944"},{"rank":149,"date":"2024-10-01","month":"2024-10","author":"ballerina.keira","followers":299300,"views":627100,"engagement":0.1019,"vpf":2.1,"duration":30,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#balletcore","#balletdancer","#balletgrwm","#ballettok","#grwm"],"archetype":"GRWM / styling","caption":"build a ballet warm up fit with me! 🩰💓 - #balletcore #ballerina #ballettok #grwm #balletgrwm #ballet #balletdancer","url":"https://www.tiktok.com/@ballerina.keira/video/7420796588215389472"},{"rank":150,"date":"2025-07-02","month":"2025-07","author":"frogslyn","followers":9047,"views":813400,"engagement":0.1697,"vpf":89.91,"duration":12,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#frogslyn"],"archetype":"General balletcore","caption":"I’ve gotten better though #frogslyn #balletcore","url":"https://www.tiktok.com/@frogslyn/video/7522303207054314782"},{"rank":151,"date":"2025-06-13","month":"2025-06","author":"danakannn","followers":1107,"views":15900,"engagement":0.1501,"vpf":14.36,"duration":43,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletcoreaesthetic","#outfit"],"archetype":"GRWM / styling","caption":"#balletcoreaesthetic #outfit","url":"https://www.tiktok.com/@danakannn/video/7515506058085862663"},{"rank":152,"date":"2023-01-12","month":"2023-01","author":"tessapeay","followers":3000000,"views":4800000,"engagement":0.1243,"vpf":1.6,"duration":22,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletcore","#fashion","#fashiontiktok","#outfitideas","#runwayfashion","#styleinspo","#winterfashion"],"archetype":"GRWM / styling","caption":"My teacher was so chill last semester 😭 #fashiontiktok #fashion #styleinspo #winterfashion #balletcore #runwayfashion #outfitideas","url":"https://www.tiktok.com/@tessapeay/video/7187848044157783342"},{"rank":153,"date":"2023-05-29","month":"2023-05","author":"veronicavcanza","followers":9939,"views":2400000,"engagement":0.0712,"vpf":241.47,"duration":26,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletclass","#balletcore","#balletcoreaesthetic","#balletcoreoutfits","#fyp","#viral"],"archetype":"GRWM / styling","caption":"Balletcore is here to stay. 🩰  #balletcore #balletcoreaesthetic #balletcoreoutfits #balletclass #fyp #viral","url":"https://www.tiktok.com/@veronicavcanza/video/7238639395937537323"},{"rank":154,"date":"2026-03-02","month":"2026-03","author":"liamvincenthutt","followers":12400,"views":1600000,"engagement":0.1124,"vpf":129.03,"duration":8,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#balletcore","#drama","#pointeshoes","#proballerina"],"archetype":"Performance / technique","caption":"🦢 🩰🙂‍↔️🩷#balletcore #drama #proballerina #pointeshoes","url":"https://www.tiktok.com/@liamvincenthutt/video/7612513248893603086"},{"rank":155,"date":"2025-04-14","month":"2025-04","author":"devilinspired","followers":96100,"views":24900,"engagement":0.0322,"vpf":0.26,"duration":14,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#devilinspired","#lolitafashion","#preordernow","#princessstyle"],"archetype":"GRWM / styling","caption":"🎀🩰 Pretty in Pink & Made to Twirl — Your Balletcore Princess Fantasy Awaits! The full set includes a puff sleeves boned corset top and a layered ruffle skirt. 💗 Search “GODD-025” o","url":"https://www.tiktok.com/@devilinspired/video/7492987636345474350"},{"rank":156,"date":"2023-10-15","month":"2023-10","author":"mikaylageier","followers":596500,"views":3000000,"engagement":0.064,"vpf":5.03,"duration":111,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballerina","#ballerinasoftiktok","#ballet","#balletcore","#balletdancer","#balletlife","#balletoutfit","#ballettok"],"archetype":"GRWM / styling","caption":"The effort this fit has taken 🫠 link in my bio to pre save my song 💕#ballet #tutu #ballerinasoftiktok #ballettok #balletoutfit #balletlife #balletcore #balletdancer #ballerina #bal","url":"https://www.tiktok.com/@mikaylageier/video/7290107125550910763"},{"rank":157,"date":"2026-04-13","month":"2026-04","author":"pie.does.ballet","followers":12500,"views":1889,"engagement":0.1244,"vpf":0.15,"duration":7,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#ballettok","#fyp"],"archetype":"General balletcore","caption":"Nothing wrong with balletcore and ballettok 😭🤭 #ballettok #balletcore #ballet #fyp","url":"https://www.tiktok.com/@pie.does.ballet/video/7628278159393164566","relevanceNow":38.2},{"rank":158,"date":"2026-01-19","month":"2026-01","author":"ditsy_floral","followers":170600,"views":29500,"engagement":0.1108,"vpf":0.17,"duration":25,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#fairy","#fairycore","#fairyoutfit","#whimsicaloutfit","#whimsigoth"],"archetype":"GRWM / styling","caption":"The Corset Belt from @kyramade (on insta) really is the perfect finishing touch to a fairy outfits! Plus how cute is the matching hair grip! Use my code DITSY_FLORAL for 10% off. Y","url":"https://www.tiktok.com/@ditsy_floral/video/7597182642806672662"},{"rank":159,"date":"2023-10-22","month":"2023-10","author":"belakarw","followers":8450,"views":110400,"engagement":0.0341,"vpf":13.07,"duration":148,"sentiment":"negative","originalAudio":0,"verified":0,"hashtags":["#ballet","#balletcore","#coquette","#fashionaesthetics","#fashiontrends","#styleaesthetics"],"archetype":"GRWM / styling","caption":"Bela Dancerella is BACK bbs!! ✨🩰 #ballet #balletcore #fashiontrends #styleaesthetics #fashionaesthetics #coquette","url":"https://www.tiktok.com/@belakarw/video/7292797596815445278"},{"rank":160,"date":"2026-04-17","month":"2026-04","author":"mereeeee30","followers":624300,"views":71200,"engagement":0.177,"vpf":0.11,"duration":15,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#fyp","#love","#turns"],"archetype":"General balletcore","caption":"🌪️🔥🖤  #ballet #balletcore #fyp #turns #love","url":"https://www.tiktok.com/@mereeeee30/video/7629814162046078239","relevanceNow":51.2},{"rank":161,"date":"2024-10-21","month":"2024-10","author":"madisonsfairytale","followers":143800,"views":319400,"engagement":0.1481,"vpf":2.22,"duration":12,"sentiment":"negative","originalAudio":0,"verified":0,"hashtags":["#ballet","#balletcore","#balletcoreaesthetic","#balletdancer","#ballettiktok","#ballettok","#coquette","#coquetteaesthetic"],"archetype":"Performance / technique","caption":"pain :,) #ballet#balletcore#balletdancer#ballettok#ballettiktok#balletcoreaesthetic#coquette#coquetteaesthetic#coquettefashion#fyp#coquettegirl#lizzygrant#lanadelrey","url":"https://www.tiktok.com/@madisonsfairytale/video/7428297556318358827"},{"rank":162,"date":"2025-08-20","month":"2025-08","author":"natalie_palmgren","followers":30000,"views":65400,"engagement":0.0998,"vpf":2.18,"duration":6,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballet","#balletcore","#dance","#dancelife","#pointeshoes"],"archetype":"Classwear / rehearsal","caption":"Nothing as empowering as chopping up an old leotard 🎀 #ballet #dance #balletcore #dancelife #pointeshoes","url":"https://www.tiktok.com/@natalie_palmgren/video/7540749123255831838"},{"rank":163,"date":"2025-05-03","month":"2025-05","author":"mgthegenius","followers":27600,"views":1526,"engagement":0.0701,"vpf":0.06,"duration":93,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore","#copinginstyle","#fashionhistory","#ghettointellectual","#stylewithsubtext"],"archetype":"GRWM / styling","caption":"Balletcore looks soft. But it’s stitched with centuries of control. Pretty on the outside. Pressure on the inside. This isn’t just fashion — it’s survival in pink satin. #Balletcor","url":"https://www.tiktok.com/@mgthegenius/video/7500362742294089006"},{"rank":164,"date":"2025-01-21","month":"2025-01","author":"hattieev","followers":12500,"views":465900,"engagement":0.1385,"vpf":37.27,"duration":14,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#balletcore","#balletcoreaesthetic","#balletcoreoutfit","#balletcostumes","#balletdancer","#balletmeme","#balletoutfit"],"archetype":"GRWM / styling","caption":"party boy is 10/10 imo 🫢#creatorsearchinsights #balletdancer #balletcore #ballerina #balletoutfit #balletcoreoutfit #balletmeme #balletcostumes #nutcracker #nutcrackerroles #nutcra","url":"https://www.tiktok.com/@hattieev/video/7462333879345532180"},{"rank":165,"date":"2025-09-13","month":"2025-09","author":"brookedevower","followers":35900,"views":2700000,"engagement":0.1576,"vpf":75.21,"duration":14,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletoutfit","#ballettok","#brookedevore","#outfitinspo","#outfitsoftheweek"],"archetype":"GRWM / styling","caption":"school and dance outfits of the week!! #outfitsoftheweek #ballettok #outfitinspo #brookedevore #balletoutfit","url":"https://www.tiktok.com/@brookedevower/video/7549687267258830094"},{"rank":166,"date":"2023-02-19","month":"2023-02","author":"jackandbec","followers":277300,"views":45700,"engagement":0.037,"vpf":0.16,"duration":46,"sentiment":"neutral","originalAudio":0,"verified":1,"hashtags":["#adultballet","#adultbeginnerballet","#bodypositivity","#plussizeballerina","#plussizeballet","#plussizeballetcore"],"archetype":"Classwear / rehearsal","caption":"Replying to @eatsnocheese  i want to buy more leotards and skirts asap 🥰  #adultbeginnerballet #adultballet #plussizeballet #plussizeballerina #plussizeballetcore #bodypositivity","url":"https://www.tiktok.com/@jackandbec/video/7201668036443540779"},{"rank":167,"date":"2026-02-28","month":"2026-02","author":"ballerina.keira","followers":299300,"views":130900,"engagement":0.1008,"vpf":0.44,"duration":12,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballerina","#balletoutfit","#fyp","#getdressedwithme"],"archetype":"GRWM / styling","caption":"get dressed with me for ballet class ⭐️ - @victoriassecret_uk pjs, slippers & hoodie @xiaoxiaodesigns leotard  @BLOCH Dance tights & leg warmers  @brandymelville_eu shorts @PUMA sp","url":"https://www.tiktok.com/@ballerina.keira/video/7611979097736039702"},{"rank":168,"date":"2026-03-28","month":"2026-03","author":"alessiabraggiato","followers":1910,"views":13900,"engagement":0.1367,"vpf":7.28,"duration":9,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletcore","#balletfit","#leotard"],"archetype":"Classwear / rehearsal","caption":"i hit the lap #balletcore #leotard #balletfit","url":"https://www.tiktok.com/@alessiabraggiato/video/7622328367920074014"},{"rank":169,"date":"2025-01-24","month":"2025-01","author":"nat.alie.dances","followers":74200,"views":461300,"engagement":0.1555,"vpf":6.22,"duration":14,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballerinasoftiktok","#ballet","#balletclass","#balletcore","#balletfit","#balletoutfit","#ballettok"],"archetype":"GRWM / styling","caption":"Not my arm being directly over @aurora grace 🩰🤍 face 🥹dc: @theharperwatters 🫶🏻 #ballet #ballettok #balletcore #ballerina #ballerinasoftiktok #ballettrend #balletoutfit #yumiko #bal","url":"https://www.tiktok.com/@nat.alie.dances/video/7463449962978774302"},{"rank":170,"date":"2026-04-17","month":"2026-04","author":"kristenvelikov","followers":25500,"views":2466,"engagement":0.0823,"vpf":0.1,"duration":59,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore","#dancestudioowner","#danceteacher","#dancewear","#professionalballerina"],"archetype":"GRWM / styling","caption":"How to make a top out of ballet tights! I think it actually turned out cute! #dancestudioowner #balletcore #danceteacher #professionalballerina #dancewear","url":"https://www.tiktok.com/@kristenvelikov/video/7629846017139117342","relevanceNow":28.0},{"rank":171,"date":"2022-12-12","month":"2022-12","author":"camilleeian","followers":10800,"views":13700,"engagement":0.054,"vpf":1.27,"duration":13,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerinasleaze","#balletaesthetic","#balletcore","#balletcoreoutfit","#blackpilatesprincess","#blackswan","#fashion","#fashionwishlist"],"archetype":"GRWM / styling","caption":"#fyp #fashion #balletcore #balletaesthetic #balletcoreoutfit #wishlist #fashionwishlist #blackpilatesprincess #ballerinasleaze #blackswan #giftguide #holidaygiftguide","url":"https://www.tiktok.com/@camilleeian/video/7176077722161138987"},{"rank":172,"date":"2026-02-27","month":"2026-02","author":"pie.does.ballet","followers":12500,"views":10600,"engagement":0.0892,"vpf":0.85,"duration":5,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballet","#ballettok","#fyp"],"archetype":"Aesthetic / moodboard","caption":"Sorry but I am a fan of ballet core pink #ballettok #ballet #fyp","url":"https://www.tiktok.com/@pie.does.ballet/video/7611603744568020246"},{"rank":173,"date":"2025-05-22","month":"2025-05","author":"leistung_bib","followers":1312,"views":481000,"engagement":0.0993,"vpf":366.62,"duration":16,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#aldc","#ballet","#ballettschuleinternationalbonn","#competitivedance","#costume","#dance","#dancecore","#dancemoms"],"archetype":"Performance / technique","caption":"dance core✨🎀 #dance #dancemoms #aldc #competitivedance #ballet #odalisquevariation #dancewavescompetition #dancecore #sixpack #costume #teambib #ballettschuleinternationalbonn #fy ","url":"https://www.tiktok.com/@leistung_bib/video/7507334308374252822"},{"rank":174,"date":"2025-05-18","month":"2025-05","author":"molly.bennett.2006","followers":149700,"views":4000000,"engagement":0.1171,"vpf":26.72,"duration":15,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#chronicillness","#gainz","#happy","#stronger"],"archetype":"General balletcore","caption":"#gainz #chronicillness #happy #stronger","url":"https://www.tiktok.com/@molly.bennett.2006/video/7505723244717116694"},{"rank":175,"date":"2025-09-04","month":"2025-09","author":"belle_urwin","followers":328000,"views":7300000,"engagement":0.1358,"vpf":22.26,"duration":25,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerinas","#balletcore","#ballettok"],"archetype":"Performance / technique","caption":"look mum I’m flyinggg! #balletcore #ballerinas #ballettok","url":"https://www.tiktok.com/@belle_urwin/video/7546258090018999559"},{"rank":176,"date":"2026-04-11","month":"2026-04","author":"ballettoklive","followers":662,"views":45600,"engagement":0.2044,"vpf":68.88,"duration":5,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletdancer","#dance","#emociones","#fyp"],"archetype":"Performance / technique","caption":"#ballet  #emociones  #dance  #balletdancer  #fyp","url":"https://www.tiktok.com/@ballettoklive/video/7627301050822757652","relevanceNow":50.7},{"rank":177,"date":"2024-04-25","month":"2024-04","author":"mikaylageier","followers":596500,"views":135000,"engagement":0.0989,"vpf":0.23,"duration":62,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballerinasoftiktok","#ballet","#balletdancer","#newmusic"],"archetype":"Performance / technique","caption":"ballet core #ballet #balletdancer #ballerina #ballerinasoftiktok #newmusic","url":"https://www.tiktok.com/@mikaylageier/video/7361601176564993326"},{"rank":178,"date":"2024-06-06","month":"2024-06","author":"biancascaglione","followers":1600000,"views":869400,"engagement":0.0927,"vpf":0.54,"duration":63,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballerina","#ballet","#dancer","#fyp"],"archetype":"Performance / technique","caption":"it’s a glow up #fyp #ballet #ballerina #dancer","url":"https://www.tiktok.com/@biancascaglione/video/7377493929169669418"},{"rank":179,"date":"2026-03-09","month":"2026-03","author":"micaelaaruizzz","followers":3020,"views":205900,"engagement":0.2175,"vpf":68.18,"duration":11,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletdancer","#ballettok","#highcortisol","#lowcortisol"],"archetype":"Performance / technique","caption":"Real ballet core 🗣️🩰 #ballettok #ballet #balletdancer #highcortisol #lowcortisol","url":"https://www.tiktok.com/@micaelaaruizzz/video/7615324734175153415"},{"rank":180,"date":"2025-04-15","month":"2025-04","author":"laurenillustrated","followers":656200,"views":36200,"engagement":0.1433,"vpf":0.06,"duration":11,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballerinalife","#ballerinas","#balletaesthetic","#balletcore","#balletdancer","#ballettiktok","#characterart","#characterillustration"],"archetype":"Classwear / rehearsal","caption":"Some recent ballerina artworks! 🩰 I love the feeling of warming up for rehearsals for a big show! The behind the scenes of what goes on in ballet! Black leos and ballet pink will a","url":"https://www.tiktok.com/@laurenillustrated/video/7493612838523505950"},{"rank":181,"date":"2023-03-28","month":"2023-03","author":"jackandbec","followers":277300,"views":37700,"engagement":0.041,"vpf":0.14,"duration":14,"sentiment":"positive","originalAudio":1,"verified":1,"hashtags":["#adultballetbeginner","#adultbeginnerballet","#plussizeballerinastory","#plussizeballet","#plussizeballetcore","#plussizeedition"],"archetype":"Classwear / rehearsal","caption":"this plus size ballerina is ready for class 🩰 #plussizeedition #plussizeballet #plussizeballerinastory #adultbeginnerballet #adultballetbeginner #plussizeballetcore","url":"https://www.tiktok.com/@jackandbec/video/7215415872075091242"},{"rank":182,"date":"2023-04-19","month":"2023-04","author":"ballerina.keira","followers":299300,"views":4600000,"engagement":0.0982,"vpf":15.37,"duration":12,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#asmrballet","#ballerina","#ballerinastyle","#balletcore","#balletdancer","#balletgrwm","#ballettok","#ballettoker"],"archetype":"GRWM / styling","caption":"grwm ballet edition 🩰🤍#pointe #balletcore #ballerinastyle #ballettoker #ballettok #grwm #balletdancer #pointeshoes #ballerina #grwmballet #balletgrwm #asmrballet  #emmachamberlain ","url":"https://www.tiktok.com/@ballerina.keira/video/7223758856751500550"},{"rank":183,"date":"2026-04-14","month":"2026-04","author":"balletblondie","followers":607300,"views":46900,"engagement":0.1165,"vpf":0.08,"duration":103,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#balletcore","#ballettok","#barre"],"archetype":"Classwear / rehearsal","caption":"Our ballet teacher doesn’t like our version of self expression that is ballet core😤 #balletcore #ballettok #barre @Ms. Victoria","url":"https://www.tiktok.com/@balletblondie/video/7628688870439128333","relevanceNow":34.5},{"rank":184,"date":"2024-09-04","month":"2024-09","author":"nat.alie.dances","followers":74200,"views":245400,"engagement":0.1002,"vpf":3.31,"duration":20,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballerinasoftiktok","#ballet","#balletchallenge","#balletclass","#balletcore","#balletdancer","#balletoutfit"],"archetype":"GRWM / styling","caption":"You can really see the gears turning in my brain for this one😭 @aurora grace #ballet #ballerina #ballettrend #balletchallenge #firstfirstsecondfirst #professionalballerina #petital","url":"https://www.tiktok.com/@nat.alie.dances/video/7410833442562247978"},{"rank":185,"date":"2026-01-14","month":"2026-01","author":"mackenziedaviz","followers":5000000,"views":328400,"engagement":0.0801,"vpf":0.07,"duration":46,"sentiment":"neutral","originalAudio":1,"verified":1,"hashtags":["#ballerina","#ballet","#balletcore","#ballettok","#interview"],"archetype":"Performance / technique","caption":"us at the beach just interviewing each other for a tiktok #ballet #ballerina #interview #ballettok #balletcore @Rianna Talento","url":"https://www.tiktok.com/@mackenziedaviz/video/7595044995699068173"},{"rank":186,"date":"2022-10-19","month":"2022-10","author":"raaymonda","followers":75400,"views":68900,"engagement":0.2118,"vpf":0.91,"duration":17,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletcore","#fyp","#innerchild","#ootd"],"archetype":"GRWM / styling","caption":"A trend I can get behind 🤍#balletcore #ootd #fyp #innerchild","url":"https://www.tiktok.com/@raaymonda/video/7156257698672086278"}],"recent":[{"rank":62,"date":"2026-04-18","month":"2026-04","author":"miley_the_ballerina","followers":8645,"views":152300,"engagement":0.2034,"vpf":17.62,"duration":11,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#ballet","#dancer","#outfit","#transition","#viral"],"archetype":"GRWM / styling","caption":"Hate this variation grrr #ballet #dancer #outfit #transition #viral","url":"https://www.tiktok.com/@miley_the_ballerina/video/7629957523008802079","relevanceNow":80.0},{"rank":61,"date":"2026-04-21","month":"2026-04","author":"defleahppard","followers":1094,"views":283,"engagement":0.1837,"vpf":0.26,"duration":51,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#alternative","#alttok","#goth","#gothic","#gothtok"],"archetype":"GRWM / styling","caption":"GRWM soft goth Pinterest edition 🖤 the person who posted this is not the creator sooo I can’t tag them 😭  @Foxblood Shop  🖤 Juliet lounge shorts  🖤 chained cardigan  @Free People l","url":"https://www.tiktok.com/@defleahppard/video/7631212114203381023","relevanceNow":69.6},{"rank":69,"date":"2026-04-17","month":"2026-04","author":"balletblondie","followers":607300,"views":273100,"engagement":0.1366,"vpf":0.45,"duration":162,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#ballettok","#diy","#makcore"],"archetype":"General balletcore","caption":"Creative expression through ballet core ✨ sorry @Ms. Victoria but I think we all can agree it’s cuter dis way😎 #ballettok #balletcore #diy","url":"https://www.tiktok.com/@balletblondie/video/7629359609358093582","relevanceNow":67.9},{"rank":70,"date":"2026-04-18","month":"2026-04","author":"ballerina.keira","followers":299300,"views":115300,"engagement":0.1369,"vpf":0.39,"duration":10,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerina","#balletoutfit","#wearingvstyling"],"archetype":"GRWM / styling","caption":"this trend but balletfied 🤭🩰 - leotard @YUMIKO  shirt & lace top @Typha  leg warmers @RubiaWear  ballet flats @BLOCH Dance  warm up boots @repetto  - #ballerina #balletoutfit #wear","url":"https://www.tiktok.com/@ballerina.keira/video/7630147015363661078","relevanceNow":66.6},{"rank":55,"date":"2026-04-18","month":"2026-04","author":"teigenbriony","followers":2495,"views":599,"engagement":0.1503,"vpf":0.24,"duration":18,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballerinacheck","#balletfashion","#bloomers","#springoutfits","#stylinginspo"],"archetype":"GRWM / styling","caption":"Outfit of the Day but it’s giving ‘Ballerina who bas lost her shoes’ 🩰✨ #stylinginspo #balletfashion #springoutfits #bloomers #ballerinacheck","url":"https://www.tiktok.com/@teigenbriony/video/7630073465680219414","relevanceNow":66.1},{"rank":104,"date":"2026-04-16","month":"2026-04","author":"pinkmanami","followers":17800,"views":1044,"engagement":0.2261,"vpf":0.06,"duration":20,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#nana","#nanahachi","#pinkhaul","#rosa"],"archetype":"GRWM / styling","caption":"🎀🩰 Thank you @Angel Ruche  10% OFF: MANAMI ✨ LINKS ✨ Outfit 2 - https://angelruche.com/collections/new-arrivals/products/my-true-form-fawn-mid-rise-fur-mini-skirt (XS) - https://an","url":"https://www.tiktok.com/@pinkmanami/video/7629492379682196756","relevanceNow":63.6},{"rank":63,"date":"2026-04-19","month":"2026-04","author":"ballerina.keira","followers":299300,"views":6012,"engagement":0.1267,"vpf":0.02,"duration":10,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#balletoutfit","#dancer","#pointeshoes"],"archetype":"GRWM / styling","caption":"quiet studio session 🩰🪽 - leotard @ballessimo skirt @Typha  pointe shoes @BLOCH Dance  - #ballerina #ballet #pointeshoes #dancer #balletoutfit","url":"https://www.tiktok.com/@ballerina.keira/video/7630518433892814102","relevanceNow":62.9},{"rank":66,"date":"2026-04-01","month":"2026-04","author":"michalinabalerina","followers":1387,"views":30900,"engagement":0.1057,"vpf":22.28,"duration":10,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#aprilfools","#balletcore","#balletlife","#ballettiktok","#blochyoungartist2026"],"archetype":"GRWM / styling","caption":"April Fools but make it ballet core with full outfit of @BLOCH Dance !  @Ig:mixt.xy  #aprilfools #ballettiktok #balletlife #balletcore #blochyoungartist2026","url":"https://www.tiktok.com/@michalinabalerina/video/7623705708428610849","relevanceNow":60.5},{"rank":34,"date":"2026-04-07","month":"2026-04","author":"dia.bia.mantequilla","followers":419,"views":7856,"engagement":0.0583,"vpf":18.75,"duration":40,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#balletcore","#balletoutfit","#ballettok","#pointeshoes","#yumiko"],"archetype":"GRWM / styling","caption":"Style a leo with me!! #balletoutfit #yumiko #ballettok #balletcore #pointeshoes","url":"https://www.tiktok.com/@dia.bia.mantequilla/video/7626152285940223262","relevanceNow":58.3},{"rank":41,"date":"2026-04-20","month":"2026-04","author":"miaissandy","followers":7252,"views":512,"engagement":0.0859,"vpf":0.07,"duration":46,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#barre","#dancer","#gymgirl"],"archetype":"Classwear / rehearsal","caption":"Barre time 🩰  #dancer #ballet #barre #balletcore #gymgirl","url":"https://www.tiktok.com/@miaissandy/video/7630982119438798094","relevanceNow":58.1},{"rank":75,"date":"2026-04-15","month":"2026-04","author":"heymissteacher","followers":2200000,"views":1100000,"engagement":0.0746,"vpf":0.5,"duration":26,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#koikub","#miniakirt","#styleinspo"],"archetype":"GRWM / styling","caption":"Let’s style my @KOI micro skirt w/ my badass ballet flats for work 🍎 #koikub #styleinspo #miniakirt","url":"https://www.tiktok.com/@heymissteacher/video/7629084146681269518","relevanceNow":57.3},{"rank":65,"date":"2026-04-21","month":"2026-04","author":"user4734813655197","followers":79,"views":376,"engagement":0.1064,"vpf":4.76,"duration":13,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#ballethaul","#haul","#leotard"],"archetype":"GRWM / styling","caption":"i can’t wait to make outfits with my new leotards :) #ballet #ballethaul #balletcore #leotard #haul","url":"https://www.tiktok.com/@user4734813655197/video/7631072211624873230","relevanceNow":55.4},{"rank":57,"date":"2026-04-18","month":"2026-04","author":"xopinkyjos","followers":4444,"views":898,"engagement":0.0802,"vpf":0.2,"duration":27,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#ballerinasoftiktok","#ballet","#balletcore","#ballettok","#pinkaesthetic"],"archetype":"Performance / technique","caption":"such beautiful #balletcore pieces from SEEMEAND! @ seemeand.official on instagram🤍🩰 #ballet #pinkaesthetic #ballerinasoftiktok #ballettok","url":"https://www.tiktok.com/@xopinkyjos/video/7630138137540349197","relevanceNow":53.8},{"rank":71,"date":"2026-04-21","month":"2026-04","author":"flydanceind","followers":1131,"views":660,"engagement":0.0955,"vpf":0.58,"duration":15,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletaesthetic","#balletcore","#balletvibes","#danceoutfit"],"archetype":"GRWM / styling","caption":"Ballet vibes only 🩰✨ outfits que se sienten tan lindos como bailar! . . . . #BalletVibes #BalletCore #BalletAesthetic #DanceOutfit","url":"https://www.tiktok.com/@flydanceind/video/7631207089049799954","relevanceNow":52.7},{"rank":160,"date":"2026-04-17","month":"2026-04","author":"mereeeee30","followers":624300,"views":71200,"engagement":0.177,"vpf":0.11,"duration":15,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#fyp","#love","#turns"],"archetype":"General balletcore","caption":"🌪️🔥🖤  #ballet #balletcore #fyp #turns #love","url":"https://www.tiktok.com/@mereeeee30/video/7629814162046078239","relevanceNow":51.2},{"rank":176,"date":"2026-04-11","month":"2026-04","author":"ballettoklive","followers":662,"views":45600,"engagement":0.2044,"vpf":68.88,"duration":5,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletdancer","#dance","#emociones","#fyp"],"archetype":"Performance / technique","caption":"#ballet  #emociones  #dance  #balletdancer  #fyp","url":"https://www.tiktok.com/@ballettoklive/video/7627301050822757652","relevanceNow":50.7},{"rank":128,"date":"2026-04-07","month":"2026-04","author":"balletblondie","followers":607300,"views":298800,"engagement":0.0994,"vpf":0.49,"duration":174,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#adhd","#balletcore","#ballettok","#grwm","#mediocreballerina","#typeb"],"archetype":"GRWM / styling","caption":"20 minute vid cut down to 3 of me chaotically trying to get my life together before ballet✨💅 @Olaplex @Not Your Mother's @TRESemmé @e.l.f. Cosmetics @NYX Professional Makeup @Maybe","url":"https://www.tiktok.com/@balletblondie/video/7626096700561657102","relevanceNow":47.2},{"rank":90,"date":"2026-04-03","month":"2026-04","author":"imperfectpointes","followers":17700,"views":75700,"engagement":0.0419,"vpf":4.28,"duration":8,"sentiment":"negative","originalAudio":1,"verified":0,"hashtags":["#balletbrand","#balletcore","#balletoutfit","#ballettights","#imperfectpointes"],"archetype":"GRWM / styling","caption":"did someone say TRIPLE PIROUETTE from fifth 🩰 haters will say it’s ai generated 🤖  Fiona Lee of The Royal Danish Ballet wearing Imperfect Pointes ‘We Got Boobs’ leotard and NEW no ","url":"https://www.tiktok.com/@imperfectpointes/video/7624493775787724054","relevanceNow":44.6},{"rank":86,"date":"2026-04-15","month":"2026-04","author":"farizasfits","followers":5650,"views":480,"engagement":0.0354,"vpf":0.08,"duration":7,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballerinaaesthetic","#ballerinacore","#balletcore","#fashion","#outfitinspo"],"archetype":"GRWM / styling","caption":"#fashion #balletcore #ballerinaaesthetic #ballerinacore #outfitinspo","url":"https://www.tiktok.com/@farizasfits/video/7629056228387261709","relevanceNow":38.2},{"rank":157,"date":"2026-04-13","month":"2026-04","author":"pie.does.ballet","followers":12500,"views":1889,"engagement":0.1244,"vpf":0.15,"duration":7,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#ballettok","#fyp"],"archetype":"General balletcore","caption":"Nothing wrong with balletcore and ballettok 😭🤭 #ballettok #balletcore #ballet #fyp","url":"https://www.tiktok.com/@pie.does.ballet/video/7628278159393164566","relevanceNow":38.2}],"breakouts":[{"rank":88,"date":"2023-02-02","month":"2023-02","author":"dcomumbc","followers":116,"views":447400,"engagement":0.0413,"vpf":3856.9,"duration":7,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#ballet","#balletcoreoutfit","#dance","#dancemajors","#greenscreen"],"archetype":"GRWM / styling","caption":"ballet core 🤩 #greenscreen #dance #dancemajors #ballet #balletcoreoutfit","url":"https://www.tiktok.com/@dcomumbc/video/7195600280170417450"},{"rank":132,"date":"2026-03-20","month":"2026-03","author":"yanebailarina","followers":3828,"views":13900000,"engagement":0.0993,"vpf":3631.14,"duration":31,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#foryou","#fy"],"archetype":"General balletcore","caption":"Como diz meu professor Vagner “quer moleza? Vai pro crosfit” #fy #foryou #ballet","url":"https://www.tiktok.com/@yanebailarina/video/7619213032039664916"},{"rank":14,"date":"2022-05-01","month":"2022-05","author":"adele.glow","followers":644,"views":1400000,"engagement":0.108,"vpf":2173.91,"duration":12,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletaesthetic","#balletcore","#balletfit","#balletoutfit","#ellefanning","#fyp","#sorryforthehashtags"],"archetype":"GRWM / styling","caption":"Such a mood  #ellefanning #balletoutfit #balletcore #balletaesthetic #ballet #balletfit #fyp #sorryforthehashtags","url":"https://www.tiktok.com/@adele.glow/video/7092749044543524102"},{"rank":102,"date":"2026-01-21","month":"2026-01","author":"secret43636","followers":480,"views":597600,"engagement":0.1762,"vpf":1245.0,"duration":12,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballet","#balletcore","#ballettok","#balletvibes","#gloomyvibes"],"archetype":"Aesthetic / moodboard","caption":"#balletvibes #ballettok #balletcore #gloomyvibes #ballet","url":"https://www.tiktok.com/@secret43636/video/7597940245010599190"},{"rank":74,"date":"2025-01-26","month":"2025-01","author":"slatesblog","followers":202,"views":151800,"engagement":0.1472,"vpf":751.49,"duration":7,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballerinasoftiktok","#ballet","#balletcore","#balletdancer","#ballettok","#blockette","#blockettecore"],"archetype":"GRWM / styling","caption":"#pinterest #fyp #ballet #balletdancer #ballettok #balletcore #ballerina #ballerinasoftiktok #trend #microtrend #coquette #coquettefashion #coquetteaesthetic #blockette #blocketteco","url":"https://www.tiktok.com/@slatesblog/video/7464359176001637654"},{"rank":141,"date":"2023-07-17","month":"2023-07","author":"melanie_fk","followers":1578,"views":678200,"engagement":0.0822,"vpf":429.78,"duration":40,"sentiment":"positive","originalAudio":0,"verified":0,"hashtags":["#balletcore","#balletoutfit","#ballettok","#beginnerballet","#djerfavenue","#startingballetin20s","#vancouver"],"archetype":"GRWM / styling","caption":"Taking my first ballet class in my 20s 🩰 #startingballetin20s #beginnerballet #balletcore #vancouver #djerfavenue #ballettok #balletoutfit","url":"https://www.tiktok.com/@melanie_fk/video/7256879985342811419"},{"rank":173,"date":"2025-05-22","month":"2025-05","author":"leistung_bib","followers":1312,"views":481000,"engagement":0.0993,"vpf":366.62,"duration":16,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#aldc","#ballet","#ballettschuleinternationalbonn","#competitivedance","#costume","#dance","#dancecore","#dancemoms"],"archetype":"Performance / technique","caption":"dance core✨🎀 #dance #dancemoms #aldc #competitivedance #ballet #odalisquevariation #dancewavescompetition #dancecore #sixpack #costume #teambib #ballettschuleinternationalbonn #fy ","url":"https://www.tiktok.com/@leistung_bib/video/7507334308374252822"},{"rank":153,"date":"2023-05-29","month":"2023-05","author":"veronicavcanza","followers":9939,"views":2400000,"engagement":0.0712,"vpf":241.47,"duration":26,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#balletclass","#balletcore","#balletcoreaesthetic","#balletcoreoutfits","#fyp","#viral"],"archetype":"GRWM / styling","caption":"Balletcore is here to stay. 🩰  #balletcore #balletcoreaesthetic #balletcoreoutfits #balletclass #fyp #viral","url":"https://www.tiktok.com/@veronicavcanza/video/7238639395937537323"},{"rank":105,"date":"2024-12-12","month":"2024-12","author":"pmphilippi","followers":18100,"views":2900000,"engagement":0.0192,"vpf":160.22,"duration":8,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#exercere","#fashion","#fyp","#girlies","#gym","#gymoutfit"],"archetype":"GRWM / styling","caption":"Ballerina gym set #ballerina #gym #london #ootd #outfitinspo #fashion #exercere #gymoutfit #pink #ballet #reformer #strawberry #pilates #workout #teamwork #letsgo #fyp #girlies 🩰✨🤍","url":"https://www.tiktok.com/@pmphilippi/video/7447454480565570838"},{"rank":2,"date":"2024-08-14","month":"2024-08","author":"imperfectpointes","followers":17700,"views":2600000,"engagement":0.0264,"vpf":146.89,"duration":18,"sentiment":"neutral","originalAudio":1,"verified":0,"hashtags":["#ballerina","#ballet","#balletclass","#balletcommunity","#balletcore","#balletdancer","#balletfashion","#balletoutfit"],"archetype":"GRWM / styling","caption":"Wearing your favourite leotard makes all the difference ❤️♻️🩰  @Chloe wears The Haina leotard and sustainable ballet tights  #ballet #ballerina #balletcore #dancewear #balletdancer","url":"https://www.tiktok.com/@imperfectpointes/video/7402926883001748768"},{"rank":18,"date":"2023-04-12","month":"2023-04","author":"michellecheng_","followers":9497,"views":1300000,"engagement":0.0684,"vpf":136.89,"duration":26,"sentiment":"positive","originalAudio":1,"verified":0,"hashtags":["#fyp","#getdressedwithme","#grwm","#nz","#outfitinspo"],"archetype":"GRWM / styling","caption":"in my balletcore era 🩰🦢 #outfitinspo #getdressedwithme #grwm #fyp #nz","url":"https://www.tiktok.com/@michellecheng_/video/7220957161889860866"},{"rank":154,"date":"2026-03-02","month":"2026-03","author":"liamvincenthutt","followers":12400,"views":1600000,"engagement":0.1124,"vpf":129.03,"duration":8,"sentiment":"neutral","originalAudio":0,"verified":0,"hashtags":["#balletcore","#drama","#pointeshoes","#proballerina"],"archetype":"Performance / technique","caption":"🦢 🩰🙂‍↔️🩷#balletcore #drama #proballerina #pointeshoes","url":"https://www.tiktok.com/@liamvincenthutt/video/7612513248893603086"}],"creators":[{"author":"balletblondie","posts":7,"views":41518800,"followers":607300,"engagement":0.0855,"vpf":68.37},{"author":"belle_urwin","posts":6,"views":29496400,"followers":328000,"engagement":0.1385,"vpf":89.93},{"author":"nat.alie.dances","posts":6,"views":8525700,"followers":74200,"engagement":0.1224,"vpf":114.9},{"author":"ballerina.keira","posts":6,"views":6192212,"followers":299300,"engagement":0.1068,"vpf":20.69},{"author":"imperfectpointes","posts":5,"views":2946253,"followers":17700,"engagement":0.0304,"vpf":166.45},{"author":"mikaylageier","posts":4,"views":4874800,"followers":596500,"engagement":0.0753,"vpf":8.17},{"author":"pie.does.ballet","posts":4,"views":55366,"followers":12500,"engagement":0.0673,"vpf":4.43},{"author":"tessapeay","posts":2,"views":5224000,"followers":3000000,"engagement":0.1183,"vpf":1.74},{"author":"brookedevower","posts":2,"views":2831100,"followers":35900,"engagement":0.1561,"vpf":78.86},{"author":"mackenziedaviz","posts":2,"views":932100,"followers":5000000,"engagement":0.1095,"vpf":0.19},{"author":"ja.lw","posts":2,"views":426100,"followers":594700,"engagement":0.2029,"vpf":0.72},{"author":"tutucarolyn","posts":2,"views":406100,"followers":37500,"engagement":0.0335,"vpf":10.83}],"hashtags":[{"tag":"#balletcore","count":130},{"tag":"#ballet","count":70},{"tag":"#ballerina","count":44},{"tag":"#ballettok","count":43},{"tag":"#balletoutfit","count":33},{"tag":"#fyp","count":31},{"tag":"#balletdancer","count":25},{"tag":"#balletcoreaesthetic","count":21},{"tag":"#balletclass","count":17},{"tag":"#balletcoreoutfit","count":15},{"tag":"#ootd","count":13},{"tag":"#ballerinasoftiktok","count":12},{"tag":"#fashion","count":11},{"tag":"#ballettiktok","count":10},{"tag":"#outfitinspo","count":10},{"tag":"#coquette","count":10}],"network":[{"source":"#ballet","target":"#balletcore","weight":48},{"source":"#balletcore","target":"#ballettok","weight":35},{"source":"#ballerina","target":"#balletcore","weight":32},{"source":"#ballerina","target":"#ballet","weight":27},{"source":"#balletcore","target":"#balletoutfit","weight":25},{"source":"#balletcore","target":"#balletdancer","weight":21},{"source":"#ballet","target":"#ballettok","weight":20},{"source":"#ballet","target":"#balletoutfit","weight":19},{"source":"#ballerina","target":"#ballettok","weight":19},{"source":"#balletcore","target":"#fyp","weight":18},{"source":"#balletcore","target":"#balletcoreaesthetic","weight":17},{"source":"#ballerina","target":"#balletoutfit","weight":16},{"source":"#ballet","target":"#balletdancer","weight":15},{"source":"#balletclass","target":"#balletcore","weight":15},{"source":"#ballet","target":"#fyp","weight":15},{"source":"#balletcore","target":"#balletcoreoutfit","weight":13},{"source":"#ballerina","target":"#balletdancer","weight":13},{"source":"#balletdancer","target":"#ballettok","weight":12}],"monthly":[{"month":"2022-03","count":1,"avgViews":34000,"engagement":0.173},{"month":"2022-05","count":2,"avgViews":708450,"engagement":0.108},{"month":"2022-06","count":2,"avgViews":61000,"engagement":0.0886},{"month":"2022-09","count":1,"avgViews":698300,"engagement":0.1429},{"month":"2022-10","count":2,"avgViews":50650,"engagement":0.1581},{"month":"2022-11","count":1,"avgViews":15300,"engagement":0.0727},{"month":"2022-12","count":3,"avgViews":121867,"engagement":0.2263},{"month":"2023-01","count":3,"avgViews":1712000,"engagement":0.1197},{"month":"2023-02","count":4,"avgViews":146925,"engagement":0.0515},{"month":"2023-03","count":6,"avgViews":249417,"engagement":0.0888},{"month":"2023-04","count":7,"avgViews":899486,"engagement":0.0921},{"month":"2023-05","count":4,"avgViews":736450,"engagement":0.0694},{"month":"2023-07","count":5,"avgViews":301067,"engagement":0.0663},{"month":"2023-08","count":1,"avgViews":2453,"engagement":0.0746},{"month":"2023-09","count":4,"avgViews":495074,"engagement":0.0887},{"month":"2023-10","count":2,"avgViews":1555200,"engagement":0.063},{"month":"2023-11","count":3,"avgViews":2439700,"engagement":0.0944},{"month":"2023-12","count":2,"avgViews":32350,"engagement":0.0883},{"month":"2024-01","count":2,"avgViews":978400,"engagement":0.0499},{"month":"2024-02","count":1,"avgViews":645000,"engagement":0.1102},{"month":"2024-03","count":2,"avgViews":77408,"engagement":0.0241},{"month":"2024-04","count":1,"avgViews":135000,"engagement":0.0989},{"month":"2024-05","count":3,"avgViews":41333,"engagement":0.0497},{"month":"2024-06","count":5,"avgViews":312219,"engagement":0.1083},{"month":"2024-07","count":2,"avgViews":457100,"engagement":0.1233},{"month":"2024-08","count":5,"avgViews":1278880,"engagement":0.0842},{"month":"2024-09","count":3,"avgViews":280133,"engagement":0.1067},{"month":"2024-10","count":5,"avgViews":1230407,"engagement":0.1537},{"month":"2024-11","count":3,"avgViews":834300,"engagement":0.0407},{"month":"2024-12","count":1,"avgViews":2900000,"engagement":0.0192},{"month":"2025-01","count":5,"avgViews":733420,"engagement":0.1232},{"month":"2025-02","count":2,"avgViews":99100,"engagement":0.0673},{"month":"2025-04","count":7,"avgViews":195243,"engagement":0.1337},{"month":"2025-05","count":3,"avgViews":1494175,"engagement":0.1152},{"month":"2025-06","count":4,"avgViews":79275,"engagement":0.0847},{"month":"2025-07","count":2,"avgViews":591900,"engagement":0.1257},{"month":"2025-08","count":4,"avgViews":123400,"engagement":0.059},{"month":"2025-09","count":5,"avgViews":5410580,"engagement":0.1459},{"month":"2025-10","count":3,"avgViews":10433333,"engagement":0.045},{"month":"2025-12","count":5,"avgViews":4951466,"engagement":0.0774},{"month":"2026-01","count":12,"avgViews":1436556,"engagement":0.1028},{"month":"2026-02","count":11,"avgViews":167943,"engagement":0.1336},{"month":"2026-03","count":14,"avgViews":1200104,"engagement":0.1039},{"month":"2026-04","count":23,"avgViews":188386,"engagement":0.0764}],"archetypes":[{"name":"GRWM / styling","count":130,"avgViews":575286,"avgEngagement":0.0899},{"name":"Performance / technique","count":19,"avgViews":2616026,"avgEngagement":0.1197},{"name":"Classwear / rehearsal","count":16,"avgViews":2878748,"avgEngagement":0.1046},{"name":"General balletcore","count":12,"avgViews":1712116,"avgEngagement":0.1179},{"name":"Aesthetic / moodboard","count":8,"avgViews":171262,"avgEngagement":0.11},{"name":"Haul / product","count":1,"avgViews":51200,"avgEngagement":0.0333}]}
+;
+
+    const lensSelect = document.getElementById('lens-select');
+    const tooltip = document.getElementById('tooltip');
+    const screeningOpen = document.getElementById('screening-open');
+    const numberFmt = new Intl.NumberFormat('en-US');
+    let currentScreeningVideo = null;
+
+    const palette = {
+      'GRWM / styling': '#b7a184',
+      'Classwear / rehearsal': '#a9b8a4',
+      'Performance / technique': '#d8b7bb',
+      'Aesthetic / moodboard': '#d9ddea',
+      'General balletcore': '#b9b0d6',
+      'Haul / product': '#d4c7a1'
+    };
+
+    function fmtCompact(value) {
+      const abs = Math.abs(value);
+      if (abs >= 1000000) return `${(value / 1000000).toFixed(value >= 10000000 ? 0 : 1)}M`;
+      if (abs >= 1000) return `${(value / 1000).toFixed(value >= 100000 ? 0 : 1)}K`;
+      return `${Math.round(value)}`;
+    }
+
+    function fmtPct(value) {
+      return `${(value * 100).toFixed(1)}%`;
+    }
+
+    function median(values) {
+      const clean = values.slice().sort((a, b) => a - b);
+      if (!clean.length) return 0;
+      const mid = Math.floor(clean.length / 2);
+      return clean.length % 2 ? clean[mid] : (clean[mid - 1] + clean[mid]) / 2;
+    }
+
+    function topTags(videos, count = 8) {
+      const freq = new Map();
+      videos.forEach(video => (video.hashtags || []).forEach(tag => freq.set(tag, (freq.get(tag) || 0) + 1)));
+      return [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, count);
+    }
+
+    function parseDate(value) {
+      return new Date(`${value}T00:00:00`);
+    }
+
+    function getLensVideos() {
+      return lensSelect.value === 'recent'
+        ? DATA.videos.filter(video => video.month === '2026-04')
+        : DATA.videos;
+    }
+
+    function getRelevantList() {
+      if (lensSelect.value === 'recent') {
+        return DATA.recent;
+      }
+      return DATA.videos.slice().sort((a, b) => a.rank - b.rank).slice(0, 20);
+    }
+
+    function getTopFiveVideos() {
+      return getRelevantList().slice(0, 5);
+    }
+
+    function getDateExtent(videos) {
+      const times = videos.map(video => parseDate(video.date).getTime());
+      return [Math.min(...times), Math.max(...times)];
+    }
+
+    function getTikTokEmbedUrl(video) {
+      const match = video.url.match(/\/video\/(\d+)/);
+      return match ? `https://www.tiktok.com/player/v1/${match[1]}?controls=1&description=1` : video.url;
+    }
+
+    function showTooltip(event, html) {
+      tooltip.innerHTML = html;
+      tooltip.style.opacity = 1;
+      tooltip.style.left = `${event.clientX}px`;
+      tooltip.style.top = `${event.clientY}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.style.opacity = 0;
+    }
+
+    function makeSvgEl(tag, attrs = {}) {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+      return el;
+    }
+
+    function renderHero() {
+      const curationCopy = document.getElementById('curation-copy');
+      const heroPills = document.getElementById('hero-pills');
+      const meta = DATA.meta;
+      if (lensSelect.value === 'recent') {
+        curationCopy.textContent = 'This lens isolates videos created between April 1, 2026 and April 21, 2026, then highlights the clips most relevant to balletcore search in this current snapshot.';
+      } else {
+        curationCopy.textContent = 'This lens keeps the full archive in view so you can compare long-run search relevance, creator repetition, and shifting content formats across the whole dataset.';
+      }
+      const videos = getLensVideos();
+      const totalViews = videos.reduce((sum, video) => sum + video.views, 0);
+      heroPills.innerHTML = [
+        `<span class="pill">${numberFmt.format(meta.rows)} videos in archive</span>`,
+        `<span class="pill">${numberFmt.format(videos.length)} in current lens</span>`,
+        `<span class="pill">${fmtCompact(totalViews)} views represented</span>`
+      ].join('');
+    }
+
+    function renderNotes() {
+      const videos = getLensVideos();
+      const totalViews = videos.reduce((sum, video) => sum + video.views, 0);
+      const medianViews = median(videos.map(video => video.views));
+      const medianEngagement = median(videos.map(video => video.engagement));
+      const avgDuration = videos.reduce((sum, video) => sum + video.duration, 0) / (videos.length || 1);
+      const originalShare = videos.filter(video => video.originalAudio).length / (videos.length || 1);
+      const verifiedShare = videos.filter(video => video.verified).length / (videos.length || 1);
+      const [minTime, maxTime] = getDateExtent(videos);
+      const notesGrid = document.getElementById('notes-grid');
+      const labels = lensSelect.value === 'recent'
+        ? ['April 2026 snapshot', 'Median views', 'Median engagement', 'Original audio share', 'Average duration', 'Verified creator share']
+        : ['Full archive', 'Median views', 'Median engagement', 'Original audio share', 'Average duration', 'Verified creator share'];
+      const values = [
+        `${videos.length} videos`,
+        fmtCompact(medianViews),
+        fmtPct(medianEngagement),
+        fmtPct(originalShare),
+        `${avgDuration.toFixed(0)} sec`,
+        fmtPct(verifiedShare)
+      ];
+      const subs = [
+        `Total views in frame: ${fmtCompact(totalViews)}. Date span: ${new Date(minTime).toISOString().slice(0, 10)} → ${new Date(maxTime).toISOString().slice(0, 10)}.`,
+        'Half of the videos sit above this view count, half below.',
+        'Median helps smooth out mega-viral outliers.',
+        'Useful for reading whether the search field leans more personal or trend-sound driven.',
+        'A quick proxy for content format and editing style.',
+        'Most of the search field is still led by non-verified accounts.'
+      ];
+      notesGrid.innerHTML = labels.map((label, idx) => `
+        <div class="note-block">
+          <div class="stat-label">${label}</div>
+          <div class="note-value">${values[idx]}</div>
+          <div class="note-subvalue">${subs[idx]}</div>
+        </div>`).join('');
+
+      const chips = topTags(videos).map(([tag, count]) => `<span class="chip">${tag} · ${count}</span>`).join('');
+      document.getElementById('hashtag-chips').innerHTML = chips;
+      document.getElementById('country-note').textContent = DATA.meta.note;
+    }
+
+    function renderRelevantList() {
+      const list = document.getElementById('relevant-list');
+      const title = document.getElementById('list-title');
+      const items = getRelevantList();
+      title.textContent = lensSelect.value === 'recent'
+        ? 'April 2026 videos, scored for freshness.'
+        : 'Top-ranked videos across the full archive.';
+      list.className = 'list list-scroll';
+      list.innerHTML = items.map((item, index) => {
+        const value = lensSelect.value === 'recent' ? `${item.relevanceNow}` : `#${item.rank}`;
+        const label = lensSelect.value === 'recent' ? 'relevance now' : 'rank';
+        return `
+          <a class="list-item" href="${item.url}" target="_blank" rel="noreferrer">
+            <div class="list-rank">${String(index + 1).padStart(2, '0')}</div>
+            <div>
+              <div class="list-name">@${item.author}</div>
+              <div class="list-meta">${item.date} · ${fmtCompact(item.views)} views · ${fmtPct(item.engagement)} engagement</div>
+            </div>
+            <div class="list-value">
+              <strong>${value}</strong>
+              <span>${label}</span>
+            </div>
+          </a>`;
+      }).join('');
+    }
+
+    function renderScatter() {
+      const svg = document.getElementById('scatter-chart');
+      svg.innerHTML = '';
+      const videos = getLensVideos();
+      const width = 760;
+      const height = 500;
+      const margin = { top: 16, right: 20, bottom: 48, left: 64 };
+      const plotW = width - margin.left - margin.right;
+      const plotH = height - margin.top - margin.bottom;
+      const maxRank = Math.max(...videos.map(video => video.rank));
+      const minLogViews = Math.log10(Math.max(1, Math.min(...videos.map(video => Math.max(1, video.views)))));
+      const maxLogViews = Math.log10(Math.max(...videos.map(video => Math.max(1, video.views))));
+      const x = rank => margin.left + ((rank - 1) / Math.max(1, maxRank - 1)) * plotW;
+      const y = views => margin.top + (1 - ((Math.log10(Math.max(1, views)) - minLogViews) / Math.max(0.0001, maxLogViews - minLogViews))) * plotH;
+
+      for (let i = 0; i < 5; i += 1) {
+        const gy = margin.top + (plotH / 4) * i;
+        svg.appendChild(makeSvgEl('line', { x1: margin.left, y1: gy, x2: width - margin.right, y2: gy, class: 'grid-line' }));
+      }
+      for (let i = 0; i < 6; i += 1) {
+        const rankValue = Math.round(1 + ((maxRank - 1) / 5) * i);
+        const gx = x(rankValue);
+        svg.appendChild(makeSvgEl('line', { x1: gx, y1: margin.top, x2: gx, y2: height - margin.bottom, class: 'grid-line' }));
+        const label = makeSvgEl('text', { x: gx, y: height - 18, 'text-anchor': 'middle', class: 'axis' });
+        label.textContent = rankValue;
+        svg.appendChild(label);
+      }
+
+      svg.appendChild(makeSvgEl('line', { x1: margin.left, y1: height - margin.bottom, x2: width - margin.right, y2: height - margin.bottom, class: 'axis-line' }));
+      svg.appendChild(makeSvgEl('line', { x1: margin.left, y1: margin.top, x2: margin.left, y2: height - margin.bottom, class: 'axis-line' }));
+
+      [minLogViews, (minLogViews + maxLogViews) / 2, maxLogViews].forEach(tick => {
+        const tickValue = Math.round(10 ** tick);
+        const label = makeSvgEl('text', { x: margin.left - 12, y: y(tickValue) + 4, 'text-anchor': 'end', class: 'axis' });
+        label.textContent = fmtCompact(tickValue);
+        svg.appendChild(label);
+      });
+
+      const xLabel = makeSvgEl('text', { x: width / 2, y: height - 2, 'text-anchor': 'middle', class: 'axis-label' });
+      xLabel.textContent = 'algorithmic rank by topic (lower = more relevant)';
+      svg.appendChild(xLabel);
+      const yLabel = makeSvgEl('text', { x: 18, y: height / 2, transform: `rotate(-90 18 ${height / 2})`, 'text-anchor': 'middle', class: 'axis-label' });
+      yLabel.textContent = 'views (log scale)';
+      svg.appendChild(yLabel);
+
+      videos.forEach(video => {
+        const circle = makeSvgEl('circle', {
+          cx: x(video.rank),
+          cy: y(video.views),
+          r: 4 + Math.min(12, video.engagement * 42),
+          fill: palette[video.archetype] || '#b7a184',
+          opacity: 0.74,
+          stroke: 'rgba(255,255,255,0.9)',
+          'stroke-width': 1.1,
+          style: 'cursor:pointer;'
+        });
+        circle.addEventListener('mousemove', event => showTooltip(event, `<strong>@${video.author}</strong><br>${video.date}<br>${fmtCompact(video.views)} views · ${fmtPct(video.engagement)} engagement<br>Rank #${video.rank}<br>${video.archetype}`));
+        circle.addEventListener('mouseleave', hideTooltip);
+        circle.addEventListener('click', () => window.open(video.url, '_blank', 'noopener,noreferrer'));
+        svg.appendChild(circle);
+      });
+    }
+
+    function renderTimeline() {
+      const svg = document.getElementById('timeline-chart');
+      svg.innerHTML = '';
+      const allVideos = DATA.videos.slice().sort((a, b) => parseDate(a.date) - parseDate(b.date));
+      const activeVideos = getLensVideos();
+      const width = 820;
+      const height = 420;
+      const margin = { top: 18, right: 22, bottom: 58, left: 74 };
+      const plotW = width - margin.left - margin.right;
+      const plotH = height - margin.top - margin.bottom;
+      const months = [];
+      const grouped = new Map();
+      allVideos.forEach(video => {
+        if (!grouped.has(video.month)) {
+          grouped.set(video.month, { month: video.month, views: 0, count: 0 });
+          months.push(video.month);
+        }
+        const bucket = grouped.get(video.month);
+        bucket.views += video.views;
+        bucket.count += 1;
+      });
+      const activeMonths = new Set(activeVideos.map(video => video.month));
+      const monthlyTotals = months.map(month => grouped.get(month));
+      const maxViews = Math.max(...monthlyTotals.map(item => item.views));
+      const band = plotW / Math.max(1, monthlyTotals.length);
+      const barWidth = Math.max(8, band * 0.72);
+      const y = views => margin.top + (1 - (views / Math.max(1, maxViews))) * plotH;
+
+      for (let i = 0; i < 5; i += 1) {
+        const gy = margin.top + (plotH / 4) * i;
+        svg.appendChild(makeSvgEl('line', { x1: margin.left, y1: gy, x2: width - margin.right, y2: gy, class: 'grid-line' }));
+        const tickValue = Math.round(maxViews * (1 - i / 4));
+        const tick = makeSvgEl('text', { x: margin.left - 12, y: gy + 4, 'text-anchor': 'end', class: 'axis' });
+        tick.textContent = fmtCompact(tickValue);
+        svg.appendChild(tick);
+      }
+
+      svg.appendChild(makeSvgEl('line', { x1: margin.left, y1: height - margin.bottom, x2: width - margin.right, y2: height - margin.bottom, class: 'axis-line' }));
+      svg.appendChild(makeSvgEl('line', { x1: margin.left, y1: margin.top, x2: margin.left, y2: height - margin.bottom, class: 'axis-line' }));
+
+      monthlyTotals.forEach((item, index) => {
+        const xPos = margin.left + band * index + band / 2;
+        const barHeight = Math.max(2, height - margin.bottom - y(item.views));
+        const rect = makeSvgEl('rect', {
+          x: xPos - barWidth / 2,
+          y: height - margin.bottom - barHeight,
+          width: barWidth,
+          height: barHeight,
+          rx: 6,
+          fill: activeMonths.has(item.month) ? 'rgba(183,161,132,0.86)' : 'rgba(67,57,47,0.14)'
+        });
+        rect.addEventListener('mousemove', event => showTooltip(event, `<strong>${item.month}</strong><br>${fmtCompact(item.views)} total views<br>${item.count} videos`));
+        rect.addEventListener('mouseleave', hideTooltip);
+        svg.appendChild(rect);
+
+        const isJanuary = item.month.endsWith('-01');
+        const isEdge = index === monthlyTotals.length - 1;
+        if (isJanuary || isEdge) {
+          const label = makeSvgEl('text', { x: xPos, y: height - 20, 'text-anchor': 'middle', class: 'axis' });
+          label.textContent = isJanuary ? item.month.slice(0, 4) : item.month;
+          svg.appendChild(label);
+        }
+      });
+
+      const xLabel = makeSvgEl('text', { x: width / 2, y: height - 2, 'text-anchor': 'middle', class: 'axis-label' });
+      xLabel.textContent = 'upload month';
+      svg.appendChild(xLabel);
+      const yLabel = makeSvgEl('text', { x: 18, y: height / 2, transform: `rotate(-90 18 ${height / 2})`, 'text-anchor': 'middle', class: 'axis-label' });
+      yLabel.textContent = 'aggregated views';
+      svg.appendChild(yLabel);
+    }
+
+    function renderTrend() {
+      const svg = document.getElementById('trend-chart');
+      svg.innerHTML = '';
+      const data = DATA.monthly;
+      const width = 820;
+      const height = 430;
+      const margin = { top: 18, right: 50, bottom: 56, left: 54 };
+      const plotW = width - margin.left - margin.right;
+      const plotH = height - margin.top - margin.bottom;
+      const maxCount = Math.max(...data.map(item => item.count));
+      const maxEng = Math.max(...data.map(item => item.engagement));
+      const band = plotW / data.length;
+      const barWidth = Math.max(6, band * 0.58);
+
+      for (let i = 0; i < 5; i += 1) {
+        const gy = margin.top + (plotH / 4) * i;
+        svg.appendChild(makeSvgEl('line', { x1: margin.left, y1: gy, x2: width - margin.right, y2: gy, class: 'grid-line' }));
+      }
+
+      svg.appendChild(makeSvgEl('line', { x1: margin.left, y1: height - margin.bottom, x2: width - margin.right, y2: height - margin.bottom, class: 'axis-line' }));
+      svg.appendChild(makeSvgEl('line', { x1: margin.left, y1: margin.top, x2: margin.left, y2: height - margin.bottom, class: 'axis-line' }));
+      svg.appendChild(makeSvgEl('line', { x1: width - margin.right, y1: margin.top, x2: width - margin.right, y2: height - margin.bottom, class: 'axis-line' }));
+
+      const points = [];
+      data.forEach((item, index) => {
+        const xPos = margin.left + band * index + band / 2;
+        const barH = (item.count / maxCount) * plotH;
+        const barY = height - margin.bottom - barH;
+        const rect = makeSvgEl('rect', {
+          x: xPos - barWidth / 2,
+          y: barY,
+          width: barWidth,
+          height: barH,
+          rx: 6,
+          fill: item.month === '2026-04' ? 'rgba(183,161,132,0.84)' : 'rgba(67,57,47,0.12)'
+        });
+        rect.addEventListener('mousemove', event => showTooltip(event, `<strong>${item.month}</strong><br>${item.count} videos<br>${fmtPct(item.engagement)} engagement<br>${fmtCompact(item.avgViews)} average views`));
+        rect.addEventListener('mouseleave', hideTooltip);
+        svg.appendChild(rect);
+        points.push([xPos, margin.top + (1 - item.engagement / maxEng) * plotH, item]);
+        if (index % 3 === 0 || index === data.length - 1) {
+          const label = makeSvgEl('text', { x: xPos, y: height - 22, 'text-anchor': 'middle', class: 'axis' });
+          label.textContent = item.month.slice(2);
+          svg.appendChild(label);
+        }
+      });
+
+      const path = points.map((point, index) => `${index === 0 ? 'M' : 'L'} ${point[0]} ${point[1]}`).join(' ');
+      svg.appendChild(makeSvgEl('path', { d: path, fill: 'none', stroke: 'rgba(216,183,187,0.95)', 'stroke-width': 2.4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+      points.forEach(([px, py, item]) => {
+        const dot = makeSvgEl('circle', { cx: px, cy: py, r: 4.6, fill: '#fffdf9', stroke: 'rgba(216,183,187,0.95)', 'stroke-width': 1.5 });
+        dot.addEventListener('mousemove', event => showTooltip(event, `<strong>${item.month}</strong><br>${item.count} videos<br>${fmtPct(item.engagement)} engagement`));
+        dot.addEventListener('mouseleave', hideTooltip);
+        svg.appendChild(dot);
+      });
+
+      const leftLabel = makeSvgEl('text', { x: 12, y: height / 2, transform: `rotate(-90 12 ${height / 2})`, 'text-anchor': 'middle', class: 'axis-label' });
+      leftLabel.textContent = 'video count';
+      svg.appendChild(leftLabel);
+      const rightLabel = makeSvgEl('text', { x: width - 6, y: height / 2, transform: `rotate(-90 ${width - 6} ${height / 2})`, 'text-anchor': 'middle', class: 'axis-label' });
+      rightLabel.textContent = 'engagement rate';
+      svg.appendChild(rightLabel);
+    }
+
+    function renderNetwork() {
+      const svg = document.getElementById('network-chart');
+      svg.innerHTML = '';
+      const width = 760;
+      const height = 480;
+      const centerX = width / 2;
+      const centerY = height / 2 + 12;
+      const tags = DATA.hashtags.slice(0, 12);
+      const maxCount = Math.max(...tags.map(tag => tag.count));
+      const positions = new Map();
+      tags.forEach((tag, index) => {
+        const angle = (-Math.PI / 2) + (index / tags.length) * Math.PI * 2;
+        const radius = 74 + (1 - tag.count / maxCount) * 128;
+        positions.set(tag.tag, {
+          x: centerX + Math.cos(angle) * radius,
+          y: centerY + Math.sin(angle) * radius,
+          r: 12 + (tag.count / maxCount) * 26,
+          count: tag.count
+        });
+      });
+
+      DATA.network.forEach(edge => {
+        const a = positions.get(edge.source);
+        const b = positions.get(edge.target);
+        if (!a || !b) return;
+        const line = makeSvgEl('line', {
+          x1: a.x,
+          y1: a.y,
+          x2: b.x,
+          y2: b.y,
+          stroke: 'rgba(67,57,47,0.12)',
+          'stroke-width': 0.8 + edge.weight * 0.16
+        });
+        line.addEventListener('mousemove', event => showTooltip(event, `<strong>${edge.source}</strong> × <strong>${edge.target}</strong><br>${edge.weight} co-occurrences`));
+        line.addEventListener('mouseleave', hideTooltip);
+        svg.appendChild(line);
+      });
+
+      tags.forEach(tag => {
+        const node = positions.get(tag.tag);
+        const circle = makeSvgEl('circle', {
+          cx: node.x,
+          cy: node.y,
+          r: node.r,
+          fill: 'rgba(183,161,132,0.78)',
+          stroke: 'rgba(255,255,255,0.92)',
+          'stroke-width': 1.2
+        });
+        circle.addEventListener('mousemove', event => showTooltip(event, `<strong>${tag.tag}</strong><br>${tag.count} appearances in archive`));
+        circle.addEventListener('mouseleave', hideTooltip);
+        svg.appendChild(circle);
+        const label = makeSvgEl('text', { x: node.x, y: node.y + 4, 'text-anchor': 'middle', class: 'axis' });
+        label.textContent = tag.tag;
+        svg.appendChild(label);
+      });
+    }
+
+    function setScreeningVideo(video) {
+      currentScreeningVideo = video;
+      const iframe = document.getElementById('screening-iframe');
+      const fallback = document.getElementById('screening-fallback');
+      iframe.src = getTikTokEmbedUrl(video);
+      fallback.innerHTML = `Watching <strong>@${video.author}</strong> · ${video.date}<br>${fmtCompact(video.views)} views · ${fmtPct(video.engagement)} engagement.<br>If the TikTok player is blocked, <a href="${video.url}" target="_blank" rel="noreferrer">open the original post</a>.`;
+      document.querySelectorAll('.reel-card').forEach(card => card.classList.toggle('is-active', card.dataset.url === video.url));
+    }
+
+    function renderScreeningRoom() {
+      const reel = document.getElementById('screening-reel');
+      const label = document.getElementById('screening-label');
+      const topFive = getTopFiveVideos();
+      label.textContent = lensSelect.value === 'recent' ? 'Top 5 most relevant videos' : 'Top 5 ranked videos';
+      reel.innerHTML = topFive.map((video, index) => `
+        <button class="reel-card${index === 0 ? ' is-active' : ''}" type="button" data-url="${video.url}">
+          <span class="list-meta">${String(index + 1).padStart(2, '0')} · ${video.date}</span>
+          <strong>@${video.author}</strong>
+          <span class="list-meta">${fmtCompact(video.views)} views · ${fmtPct(video.engagement)} engagement</span>
+          <p>${video.caption}</p>
+        </button>
+      `).join('');
+
+      reel.querySelectorAll('.reel-card').forEach((card, index) => {
+        card.addEventListener('click', () => setScreeningVideo(topFive[index]));
+      });
+      reel.onwheel = event => {
+        if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
+          event.preventDefault();
+          reel.scrollLeft += event.deltaY;
+        }
+      };
+      if (!currentScreeningVideo || !topFive.some(video => video.url === currentScreeningVideo.url)) {
+        setScreeningVideo(topFive[0]);
+      } else {
+        setScreeningVideo(currentScreeningVideo);
+      }
+    }
+
+    function renderBreakouts() {
+      const creators = document.getElementById('creator-list');
+      creators.innerHTML = DATA.breakouts.slice(0, 8).map((item, index) => `
+        <a class="list-item" href="${item.url}" target="_blank" rel="noreferrer">
+          <div class="list-rank">${String(index + 1).padStart(2, '0')}</div>
+          <div>
+            <div class="list-name">@${item.author}</div>
+            <div class="list-meta">${fmtCompact(item.views)} views · ${fmtCompact(item.followers)} followers</div>
+          </div>
+          <div class="list-value">
+            <strong>${item.vpf.toFixed(0)}×</strong>
+            <span>views / follower</span>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    function renderArchetypes() {
+      const container = document.getElementById('archetype-list');
+      const maxCount = Math.max(...DATA.archetypes.map(item => item.count));
+      container.innerHTML = DATA.archetypes.map(item => `
+        <div class="archetype-card">
+          <div class="archetype-head">
+            <div>
+              <div class="archetype-name">${item.name}</div>
+              <div class="list-meta">${item.count} videos · ${fmtPct(item.count / DATA.meta.rows)} of archive</div>
+            </div>
+            <div class="stat-value">${fmtCompact(item.avgViews)} views</div>
+          </div>
+          <div class="bar-track"><div class="bar-fill" style="width:${(item.count / maxCount) * 100}%; background:${palette[item.name] || '#b7a184'}"></div></div>
+          <div class="small-note">Average engagement: ${fmtPct(item.avgEngagement)}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderAll() {
+      renderHero();
+      renderNotes();
+      renderRelevantList();
+      renderScatter();
+      renderTimeline();
+      renderScreeningRoom();
+      renderTrend();
+      renderBreakouts();
+      renderNetwork();
+      renderArchetypes();
+    }
+
+    screeningOpen.addEventListener('click', () => {
+      if (currentScreeningVideo) window.open(currentScreeningVideo.url, '_blank', 'noopener,noreferrer');
+    });
+
+    lensSelect.addEventListener('change', renderAll);
+    renderAll();
+  </script>
+</body>
+</html>

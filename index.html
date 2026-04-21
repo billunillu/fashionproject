@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmos Archive</title>
+  <style>
+    :root {
+      --text: #2b2723;
+      --muted: rgba(43, 39, 35, 0.62);
+      --line: rgba(67, 57, 47, 0.12);
+      --shadow: 0 24px 80px rgba(120, 102, 83, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: #f5f1ea;
+      overflow: hidden;
+    }
+
+    .bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      filter: saturate(0.72) contrast(0.92) brightness(0.86);
+    }
+
+    .bg-fallback {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(183, 161, 132, 0.18), transparent 24%),
+        radial-gradient(circle at 84% 24%, rgba(216, 183, 187, 0.16), transparent 22%),
+        radial-gradient(circle at 74% 78%, rgba(169, 184, 164, 0.13), transparent 22%),
+        linear-gradient(180deg, #f8f5ef 0%, #f3eee5 44%, #efe8de 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, rgba(248,245,239,0.38), rgba(239,232,222,0.72)),
+        radial-gradient(circle at center, rgba(255,255,255,0.08), rgba(255,255,255,0));
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.15;
+      background-image:
+        radial-gradient(circle at 12% 22%, rgba(67,57,47,0.12) 0 0.8px, transparent 1px),
+        radial-gradient(circle at 78% 30%, rgba(67,57,47,0.09) 0 0.9px, transparent 1.1px),
+        radial-gradient(circle at 62% 70%, rgba(67,57,47,0.07) 0 0.8px, transparent 1px),
+        radial-gradient(circle at 34% 84%, rgba(67,57,47,0.06) 0 0.7px, transparent 0.9px);
+    }
+
+    .page {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .shell {
+      width: min(860px, 100%);
+      display: grid;
+      justify-items: center;
+      gap: 18px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 860px;
+      font-size: clamp(3.2rem, 6.6vw, 6.6rem);
+      line-height: 0.94;
+      font-weight: 300;
+      letter-spacing: -0.05em;
+    }
+
+    .button-stack {
+      width: min(560px, 100%);
+      display: grid;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .home-button {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      padding: 18px 20px;
+      border-radius: 20px;
+      text-decoration: none;
+      color: inherit;
+      background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,251,245,0.5));
+      border: 1px solid rgba(67,57,47,0.08);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      transition: transform 220ms ease, background 220ms ease;
+    }
+
+    .home-button:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(180deg, rgba(255,255,255,0.82), rgba(255,251,245,0.56));
+    }
+
+    .button-label {
+      text-align: left;
+      font-size: clamp(1.1rem, 2vw, 1.45rem);
+      line-height: 1.15;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+    }
+
+    .button-arrow {
+      color: rgba(43,39,35,0.42);
+      font-size: 24px;
+      line-height: 1;
+      flex: 0 0 auto;
+    }
+
+    .note {
+      max-width: 520px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: rgba(43,39,35,0.52);
+    }
+
+    @media (max-width: 720px) {
+      .page { padding: 16px; }
+      .home-button { padding: 16px; border-radius: 18px; }
+      .button-label { font-size: 1.05rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-fallback"></div>
+  <video class="bg-video" autoplay muted loop playsinline>
+    <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+  </video>
+
+  <main class="page">
+    <section class="shell">
+      <div class="eyebrow">Cosmos archive</div>
+      <h1>Choose an aesthetic view.</h1>
+
+      <div class="button-stack">
+        <a class="home-button" href="dma_aesthetic_map.html">
+          <span class="button-label">Explore Aesthetics by Geography</span>
+          <span class="button-arrow">↗</span>
+        </a>
+
+        <a class="home-button" href="balletcore_tiktok_dashboard.html">
+          <span class="button-label">Explore Aesthetics on TikTok</span>
+          <span class="button-arrow">↗</span>
+        </a>
+      </div>
+
+      <div class="note">Background video uses an external public sample and falls back to the soft gradient treatment if it doesn’t load.</div>
+    </section>
+  </main>
+</body>
+</html>

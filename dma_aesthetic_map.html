@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmos Archive · DMA Aesthetic Trends</title>
+  <style>
+    :root {
+      --bg: #f5f1ea;
+      --bg-soft: #ede7de;
+      --surface: rgba(255, 255, 255, 0.58);
+      --surface-strong: rgba(255, 255, 255, 0.82);
+      --text: #2b2723;
+      --muted: rgba(43, 39, 35, 0.58);
+      --faint: rgba(43, 39, 35, 0.18);
+      --line: rgba(43, 39, 35, 0.12);
+      --accent: #a8957a;
+      --accent-soft: #8f806c;
+      --highlight: #b7a184;
+      --tooltip: rgba(255, 252, 247, 0.96);
+      --shadow: 0 24px 80px rgba(120, 102, 83, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 16%, rgba(194, 177, 153, 0.18), transparent 26%),
+        radial-gradient(circle at 82% 12%, rgba(188, 182, 172, 0.14), transparent 22%),
+        radial-gradient(circle at 70% 78%, rgba(194, 178, 154, 0.12), transparent 20%),
+        linear-gradient(180deg, #f8f5ef 0%, #f3eee5 44%, #efe8de 100%);
+      letter-spacing: 0.01em;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 12% 22%, rgba(67,57,47,0.12) 0 0.8px, transparent 1px),
+        radial-gradient(circle at 78% 30%, rgba(67,57,47,0.09) 0 0.9px, transparent 1.1px),
+        radial-gradient(circle at 62% 70%, rgba(67,57,47,0.07) 0 0.8px, transparent 1px),
+        radial-gradient(circle at 34% 84%, rgba(67,57,47,0.06) 0 0.7px, transparent 0.9px);
+      opacity: 0.22;
+    }
+
+    .page {
+      max-width: 1520px;
+      margin: 0 auto;
+      padding: 40px 34px 52px;
+      position: relative;
+    }
+
+    .masthead {
+      margin-bottom: 36px;
+    }
+
+    .site-nav {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+
+    .site-nav-shell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.48);
+      border: 1px solid rgba(67,57,47,0.08);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .site-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: color 220ms ease;
+    }
+
+    .site-link:hover,
+    .site-link.is-active {
+      color: var(--text);
+    }
+
+    .eyebrow,
+    .cluster-kicker,
+    label,
+    .subtle,
+    .hint,
+    .microcopy {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow {
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 820px;
+      font-size: clamp(2.7rem, 5vw, 5.5rem);
+      line-height: 0.96;
+      font-weight: 300;
+      letter-spacing: -0.04em;
+    }
+
+    .lead {
+      margin: 18px 0 0;
+      max-width: 680px;
+      color: rgba(43, 39, 35, 0.68);
+      font-size: 15px;
+      line-height: 1.8;
+      font-weight: 300;
+    }
+
+    .curation {
+      width: 100%;
+      padding: 24px 28px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 251, 245, 0.5));
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      display: grid;
+      grid-template-columns: 180px minmax(280px, 1fr) minmax(340px, 1.3fr);
+      gap: 28px;
+      align-items: end;
+    }
+
+    .curation:hover .microcopy,
+    .cluster:hover .cluster-meta,
+    .top5-item:hover .top5-meta,
+    .top5-item:hover .top5-value span {
+      opacity: 1;
+    }
+
+    .microcopy,
+    .cluster-meta,
+    .top5-meta,
+    .top5-value span {
+      opacity: 0.58;
+      transition: opacity 420ms ease;
+    }
+
+    .select-wrap {
+      position: relative;
+    }
+
+    .curation-copy {
+      margin: 0;
+      max-width: none;
+      font-size: 13px;
+      line-height: 1.9;
+      align-self: center;
+    }
+
+    select {
+      width: 100%;
+      appearance: none;
+      border: none;
+      outline: none;
+      border-radius: 18px;
+      padding: 14px 42px 14px 0;
+      background: transparent;
+      color: var(--text);
+      font-size: 18px;
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .select-wrap::after {
+      content: "↘";
+      position: absolute;
+      right: 4px;
+      top: 12px;
+      color: var(--muted);
+      font-size: 18px;
+      pointer-events: none;
+    }
+
+    .file-warning {
+      margin: 0 0 28px;
+      padding: 0;
+      color: rgba(43, 39, 35, 0.48);
+      font-size: 12px;
+      display: none;
+    }
+
+    .constellation {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 24px;
+      align-items: start;
+    }
+
+    .cluster {
+      position: relative;
+      padding: 26px 26px 24px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.66), rgba(255, 251, 245, 0.42));
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      transition: transform 480ms ease, background 480ms ease, box-shadow 480ms ease;
+      overflow: hidden;
+    }
+
+    .cluster::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      border: 1px solid rgba(67, 57, 47, 0.05);
+    }
+
+    .cluster:hover {
+      transform: translateY(-3px);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 251, 245, 0.5));
+    }
+
+    .cluster-map {
+      grid-column: span 7;
+      min-height: 760px;
+      padding-top: 34px;
+    }
+
+    .cluster-top5 {
+      grid-column: span 5;
+      transform: translateY(42px);
+    }
+
+    .cluster-trend {
+      grid-column: span 8;
+      transform: translateX(34px);
+      min-height: 620px;
+    }
+
+    .cluster-notes {
+      grid-column: span 4;
+      transform: translateY(-36px);
+      min-height: 620px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .cluster-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .cluster-head h2 {
+      margin: 8px 0 0;
+      font-weight: 300;
+      font-size: 28px;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .cluster-meta {
+      color: rgba(43, 39, 35, 0.62);
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 280px;
+      text-align: right;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    #map-svg {
+      filter: drop-shadow(0 18px 34px rgba(125, 112, 95, 0.12));
+      cursor: grab;
+    }
+
+    #map-svg.dragging {
+      cursor: grabbing;
+    }
+
+    .map-toolbar {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+
+    .map-toolbar .select-wrap {
+      max-width: 420px;
+    }
+
+    .zoom-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .zoom-button {
+      border: 1px solid rgba(67, 57, 47, 0.1);
+      background: rgba(255, 255, 255, 0.52);
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 180ms ease, transform 180ms ease;
+    }
+
+    .zoom-button:hover {
+      background: rgba(255, 255, 255, 0.88);
+      transform: translateY(-1px);
+    }
+
+    .map-shape {
+      stroke: rgba(67, 57, 47, 0.14);
+      stroke-width: 1;
+      cursor: pointer;
+      transition: fill 320ms ease, stroke 320ms ease, opacity 320ms ease, transform 320ms ease;
+    }
+
+    .map-shape:hover {
+      stroke: rgba(67, 57, 47, 0.34);
+      stroke-width: 1.25;
+      opacity: 1;
+    }
+
+    .map-shape.selected {
+      stroke: var(--highlight);
+      stroke-width: 1.8;
+    }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .legend-bar {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(67,57,47,0.08), rgba(183,161,132,0.7));
+    }
+
+    .top5-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .top5-item {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(67, 57, 47, 0.08);
+      cursor: pointer;
+      transition: transform 320ms ease, opacity 320ms ease;
+    }
+
+    .top5-item:hover {
+      transform: translateX(6px);
+    }
+
+    .top5-rank {
+      color: rgba(43, 39, 35, 0.44);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+    }
+
+    .top5-name {
+      font-size: 18px;
+      font-weight: 300;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .top5-meta {
+      color: rgba(43, 39, 35, 0.56);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .top5-value {
+      text-align: right;
+    }
+
+    .top5-value strong {
+      display: block;
+      font-weight: 300;
+      font-size: 21px;
+      letter-spacing: -0.02em;
+    }
+
+    .top5-value span {
+      color: rgba(43, 39, 35, 0.48);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .axis,
+    .axis-label {
+      fill: rgba(43, 39, 35, 0.46);
+      font-size: 11px;
+      font-family: Inter, Helvetica, Arial, sans-serif;
+      letter-spacing: 0.03em;
+    }
+
+    .axis-line,
+    .grid-line {
+      stroke: rgba(67, 57, 47, 0.1);
+      stroke-width: 1;
+    }
+
+    .line {
+      fill: none;
+      stroke: rgba(168, 149, 122, 0.95);
+      stroke-width: 2;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+    }
+
+    .dot {
+      fill: #fffdf9;
+      stroke: rgba(168, 149, 122, 0.88);
+      stroke-width: 1.4;
+    }
+
+    .notes-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 14px;
+    }
+
+    .note-block {
+      padding: 16px 0;
+      border-top: 1px solid rgba(67, 57, 47, 0.08);
+    }
+
+    .note-label {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .note-value {
+      font-size: clamp(1.5rem, 3.2vw, 2.7rem);
+      font-weight: 300;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .note-subvalue {
+      margin-top: 10px;
+      color: rgba(43, 39, 35, 0.56);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .empty {
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      color: rgba(43, 39, 35, 0.45);
+      text-align: left;
+      padding: 24px 0;
+      max-width: 360px;
+      line-height: 1.8;
+    }
+
+    .tooltip {
+      position: fixed;
+      pointer-events: none;
+      background: var(--tooltip);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      line-height: 1.55;
+      border: 1px solid rgba(67, 57, 47, 0.08);
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 12px));
+      white-space: nowrap;
+      z-index: 20;
+      box-shadow: 0 18px 46px rgba(120, 102, 83, 0.16);
+      transition: opacity 220ms ease;
+    }
+
+    @media (max-width: 1200px) {
+      .constellation {
+        grid-template-columns: 1fr;
+      }
+
+      .curation,
+      .cluster-map,
+      .cluster-top5,
+      .cluster-trend,
+      .cluster-notes {
+        width: 100%;
+        grid-column: auto;
+        transform: none;
+      }
+
+      .curation {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        align-items: start;
+      }
+
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 24px 18px 32px;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .cluster,
+      .curation {
+        padding: 20px 18px;
+        border-radius: 24px;
+      }
+
+      .cluster-head {
+        flex-direction: column;
+      }
+
+      .cluster-meta {
+        text-align: left;
+        max-width: none;
+      }
+
+      .map-toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="site-nav">
+      <div class="site-nav-shell">
+        <a class="site-link" href="index.html">Home</a>
+        <a class="site-link is-active" href="dma_aesthetic_map.html">Map</a>
+        <a class="site-link" href="balletcore_tiktok_dashboard.html">TikTok</a>
+      </div>
+    </div>
+
+    <header class="masthead">
+      <aside class="curation">
+        <div class="microcopy">Curated lens</div>
+        <div>
+          <label for="keyword-select">Aesthetic selection</label>
+          <div class="select-wrap">
+            <select id="keyword-select"></select>
+          </div>
+        </div>
+        <p class="lead curation-copy">This interface behaves more like an archive than a dashboard: hover to inspect, click a DMA to expand its memory, and move slowly.</p>
+      </aside>
+    </header>
+
+    <div id="file-warning" class="file-warning">If the archive appears empty, regenerate the local assets with <code>python3 build_dma_visual_assets.py</code>.</div>
+
+    <main class="constellation">
+      <section class="cluster cluster-map">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Geographic field</div>
+            <h2>Search volume, suspended across DMA space.</h2>
+          </div>
+          <div class="cluster-meta" id="map-caption">Select an aesthetic to reveal regional concentration.</div>
+        </div>
+        <div class="map-toolbar">
+          <div>
+            <label for="dma-select">Region / DMA</label>
+            <div class="select-wrap">
+              <select id="dma-select"></select>
+            </div>
+          </div>
+          <div class="zoom-controls">
+            <button id="zoom-out" class="zoom-button" type="button" aria-label="Zoom out">−</button>
+            <button id="zoom-reset" class="zoom-button" type="button" aria-label="Reset zoom">⟲</button>
+            <button id="zoom-in" class="zoom-button" type="button" aria-label="Zoom in">+</button>
+          </div>
+        </div>
+        <svg id="map-svg" viewBox="0 0 960 620" aria-label="DMA map"></svg>
+        <div class="legend">
+          <span>Diffuse</span>
+          <div class="legend-bar"></div>
+          <span>Concentrated</span>
+        </div>
+      </section>
+
+      <section class="cluster cluster-top5">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Population-adjusted prominence</div>
+            <h2>Top five DMAs by search intensity relative to population.</h2>
+          </div>
+          <div class="cluster-meta">Each entry is normalized as total search volume per 100k residents for the selected aesthetic.</div>
+        </div>
+        <div id="top5-container" class="top5-list"></div>
+      </section>
+
+      <section class="cluster cluster-trend">
+        <div class="cluster-head">
+          <div>
+            <div class="cluster-kicker">Temporal trace</div>
+            <h2>Historical drift by month.</h2>
+          </div>
+          <div class="cluster-meta" id="chart-caption">Choose a DMA from the map, the region selector, or the ranking to open its timeline.</div>
+        </div>
+        <div id="chart-container" class="empty">Click a DMA region, use the DMA selector, or choose one of the ranked markets to reveal the full monthly sequence, formatted as calendar months such as Jan 2025.</div>
+      </section>
+
+      <aside class="cluster cluster-notes">
+        <div>
+          <div class="cluster-kicker">Selected fragment</div>
+          <h2 style="margin:8px 0 0; font-size:28px; font-weight:300; line-height:1.08; letter-spacing:-0.03em;">A single market, held in focus.</h2>
+          <div class="notes-grid">
+            <div class="note-block">
+              <div class="note-label">DMA</div>
+              <div class="note-value" id="selected-dma">None</div>
+              <div class="note-subvalue">The chosen geographic fragment appears here after selection.</div>
+            </div>
+            <div class="note-block">
+              <div class="note-label">Total volume</div>
+              <div class="note-value" id="selected-total">—</div>
+              <div class="note-subvalue">Cumulative search volume for the selected aesthetic within the chosen DMA.</div>
+            </div>
+            <div class="note-block">
+              <div class="note-label">Peak month</div>
+              <div class="note-value" id="selected-peak">—</div>
+              <div class="note-subvalue">The highest monthly moment in the available history.</div>
+            </div>
+          </div>
+        </div>
+        <div class="microcopy">Hover reveals context. Click deepens the view.</div>
+      </aside>
+    </main>
+  </div>
+
+  <div id="tooltip" class="tooltip"></div>
+
+  <script src="dma_visual_data/geo_projected.js"></script>
+  <script src="dma_visual_data/keyword_totals.js"></script>
+  <script>
+    const state = {
+      geo: null,
+      keywordTotals: null,
+      dmaCache: new Map(),
+      dmaScriptCache: new Map(),
+      selectedKeyword: null,
+      selectedDma: null,
+      mapView: { x: 0, y: 0, width: 960, height: 620 },
+      mapBaseView: { x: 0, y: 0, width: 960, height: 620 },
+      isDraggingMap: false,
+      dragStart: null,
+    };
+
+    const mapSvg = document.getElementById('map-svg');
+    const keywordSelect = document.getElementById('keyword-select');
+    const dmaSelect = document.getElementById('dma-select');
+    const tooltip = document.getElementById('tooltip');
+    const chartContainer = document.getElementById('chart-container');
+    const top5Container = document.getElementById('top5-container');
+    const fileWarning = document.getElementById('file-warning');
+
+    if (window.location.protocol === 'file:') {
+      fileWarning.style.display = 'block';
+    }
+
+    function formatNumber(value) {
+      return new Intl.NumberFormat('en-US').format(Math.round(value || 0));
+    }
+
+    function formatPer100k(value) {
+      return new Intl.NumberFormat('en-US', { maximumFractionDigits: 1 }).format(value || 0);
+    }
+
+    function normalizePeriod(point) {
+      const rawYear = point[0];
+      const rawMonth = point[1];
+      if (rawMonth === 13) {
+        return { year: rawYear + 1, month: 1 };
+      }
+      return { year: rawYear, month: rawMonth };
+    }
+
+    function normalizeTerm(value) {
+      return value
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/_unbranded/g, '')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function formatPeriod(point) {
+      const period = normalizePeriod(point);
+      const date = new Date(period.year, period.month - 1, 1);
+      return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+    }
+
+    function setSummary(dmaName, total, peakLabel) {
+      document.getElementById('selected-dma').textContent = dmaName || 'None';
+      document.getElementById('selected-total').textContent = total != null ? formatNumber(total) : '—';
+      document.getElementById('selected-peak').textContent = peakLabel || '—';
+    }
+
+    async function selectDma(dmaCode, options = {}) {
+      const { zoom = false } = options;
+      state.selectedDma = dmaCode;
+      if (dmaSelect.value !== dmaCode) {
+        dmaSelect.value = dmaCode;
+      }
+      renderMap();
+      if (zoom) {
+        zoomToDma(dmaCode);
+      }
+      await renderSelectedSeries();
+    }
+
+    function renderTop5PerCapita() {
+      const totals = state.keywordTotals.totals[state.selectedKeyword] || {};
+      const populations = state.keywordTotals.populations || {};
+      const dmaNames = state.keywordTotals.dmaNames || {};
+
+      const rows = Object.entries(totals)
+        .map(([dma, total]) => {
+          const population = populations[dma];
+          if (!population) {
+            return null;
+          }
+          return {
+            dma,
+            name: dmaNames[dma] || dma,
+            total,
+            population,
+            per100k: (Number(total) / population) * 100000,
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => b.per100k - a.per100k)
+        .slice(0, 5);
+
+      if (!rows.length) {
+        top5Container.innerHTML = '<div class="microcopy">No population-adjusted ranking is available for this aesthetic.</div>';
+        return;
+      }
+
+      top5Container.innerHTML = rows.map((row, index) => `
+        <div class="top5-item" data-dma="${row.dma}">
+          <div class="top5-rank">0${index + 1}</div>
+          <div>
+            <div class="top5-name">${row.name}</div>
+            <div class="top5-meta">DMA ${row.dma} · ${formatNumber(row.total)} searches · population ${formatNumber(row.population)}</div>
+          </div>
+          <div class="top5-value">
+            <strong>${formatPer100k(row.per100k)}</strong>
+            <span>per 100k</span>
+          </div>
+        </div>
+      `).join('');
+
+      top5Container.querySelectorAll('.top5-item').forEach((element) => {
+        element.addEventListener('click', async () => {
+          await selectDma(element.dataset.dma, { zoom: true });
+        });
+      });
+    }
+
+    function setMapView(view) {
+      state.mapView = {
+        x: Math.max(0, Math.min(state.mapBaseView.width - view.width, view.x)),
+        y: Math.max(0, Math.min(state.mapBaseView.height - view.height, view.y)),
+        width: Math.min(state.mapBaseView.width, Math.max(120, view.width)),
+        height: Math.min(state.mapBaseView.height, Math.max(80, view.height)),
+      };
+      mapSvg.setAttribute('viewBox', `${state.mapView.x} ${state.mapView.y} ${state.mapView.width} ${state.mapView.height}`);
+    }
+
+    function svgPointFromClient(clientX, clientY) {
+      const rect = mapSvg.getBoundingClientRect();
+      const x = state.mapView.x + ((clientX - rect.left) / rect.width) * state.mapView.width;
+      const y = state.mapView.y + ((clientY - rect.top) / rect.height) * state.mapView.height;
+      return { x, y };
+    }
+
+    function zoomMap(scale, center) {
+      const view = state.mapView;
+      const nextWidth = view.width / scale;
+      const nextHeight = view.height / scale;
+      const ratioX = (center.x - view.x) / view.width;
+      const ratioY = (center.y - view.y) / view.height;
+      setMapView({
+        x: center.x - (nextWidth * ratioX),
+        y: center.y - (nextHeight * ratioY),
+        width: nextWidth,
+        height: nextHeight,
+      });
+    }
+
+    function resetMapView() {
+      setMapView({ ...state.mapBaseView });
+    }
+
+    function zoomToDma(dmaCode) {
+      const feature = state.geo.features.find((item) => item.dma === dmaCode);
+      if (!feature) {
+        return;
+      }
+      const values = feature.path.match(/-?\d+(?:\.\d+)?/g)?.map(Number) || [];
+      const xs = [];
+      const ys = [];
+      for (let index = 0; index < values.length; index += 2) {
+        xs.push(values[index]);
+        ys.push(values[index + 1]);
+      }
+      const minX = Math.min(...xs);
+      const maxX = Math.max(...xs);
+      const minY = Math.min(...ys);
+      const maxY = Math.max(...ys);
+      const padX = Math.max(18, (maxX - minX) * 0.25);
+      const padY = Math.max(18, (maxY - minY) * 0.25);
+      setMapView({
+        x: minX - padX,
+        y: minY - padY,
+        width: (maxX - minX) + (padX * 2),
+        height: (maxY - minY) + (padY * 2),
+      });
+    }
+
+    function attachMapInteractions() {
+      mapSvg.addEventListener('wheel', (event) => {
+        event.preventDefault();
+        const center = svgPointFromClient(event.clientX, event.clientY);
+        zoomMap(event.deltaY < 0 ? 1.18 : 0.88, center);
+      }, { passive: false });
+
+      mapSvg.addEventListener('mousedown', (event) => {
+        state.isDraggingMap = true;
+        state.dragStart = {
+          point: svgPointFromClient(event.clientX, event.clientY),
+          view: { ...state.mapView },
+        };
+        mapSvg.classList.add('dragging');
+      });
+
+      window.addEventListener('mousemove', (event) => {
+        if (!state.isDraggingMap || !state.dragStart) {
+          return;
+        }
+        const point = svgPointFromClient(event.clientX, event.clientY);
+        const dx = point.x - state.dragStart.point.x;
+        const dy = point.y - state.dragStart.point.y;
+        setMapView({
+          x: state.dragStart.view.x - dx,
+          y: state.dragStart.view.y - dy,
+          width: state.dragStart.view.width,
+          height: state.dragStart.view.height,
+        });
+      });
+
+      window.addEventListener('mouseup', () => {
+        state.isDraggingMap = false;
+        state.dragStart = null;
+        mapSvg.classList.remove('dragging');
+      });
+
+      document.getElementById('zoom-in').addEventListener('click', () => {
+        zoomMap(1.18, { x: state.mapView.x + state.mapView.width / 2, y: state.mapView.y + state.mapView.height / 2 });
+      });
+      document.getElementById('zoom-out').addEventListener('click', () => {
+        zoomMap(0.88, { x: state.mapView.x + state.mapView.width / 2, y: state.mapView.y + state.mapView.height / 2 });
+      });
+      document.getElementById('zoom-reset').addEventListener('click', resetMapView);
+    }
+
+    function colorScale(value, max) {
+      if (!max || value <= 0) {
+        return 'rgba(196, 182, 161, 0.16)';
+      }
+      const t = Math.max(0, Math.min(1, Math.log1p(value) / Math.log1p(max)));
+      const lightness = 88 - (t * 34);
+      const alpha = 0.28 + (t * 0.48);
+      return `hsla(36, 24%, ${lightness}%, ${alpha})`;
+    }
+
+    function showTooltip(event, html) {
+      tooltip.innerHTML = html;
+      tooltip.style.opacity = '1';
+      tooltip.style.left = `${event.clientX}px`;
+      tooltip.style.top = `${event.clientY}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.style.opacity = '0';
+    }
+
+    async function loadJson(path) {
+      const response = await fetch(path);
+      if (!response.ok) {
+        throw new Error(`Failed to load ${path}`);
+      }
+      return response.json();
+    }
+
+    async function loadScript(path) {
+      if (state.dmaScriptCache.has(path)) {
+        return state.dmaScriptCache.get(path);
+      }
+      const promise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = path;
+        script.async = true;
+        script.onload = () => resolve();
+        script.onerror = () => reject(new Error(`Failed to load ${path}`));
+        document.head.appendChild(script);
+      });
+      state.dmaScriptCache.set(path, promise);
+      return promise;
+    }
+
+    function renderMap() {
+      mapSvg.innerHTML = '';
+      const keywordTotals = state.keywordTotals.totals[state.selectedKeyword] || {};
+      const maxValue = Math.max(...Object.values(keywordTotals), 0);
+      document.getElementById('map-caption').textContent = `${state.selectedKeyword} · shaded by total search volume across DMA space`;
+
+      state.geo.features.forEach((feature) => {
+        const value = keywordTotals[feature.dma] || 0;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', feature.path);
+        path.setAttribute('class', 'map-shape');
+        path.dataset.dma = feature.dma;
+        path.dataset.name = feature.name;
+        path.style.fill = colorScale(value, maxValue);
+
+        if (feature.dma === state.selectedDma) {
+          path.classList.add('selected');
+        }
+
+        const tooltipHtml = `<strong>${feature.name}</strong><br/>DMA ${feature.dma}<br/>${formatNumber(value)} total searches`;
+        path.addEventListener('mouseenter', (event) => showTooltip(event, tooltipHtml));
+        path.addEventListener('mousemove', (event) => showTooltip(event, tooltipHtml));
+        path.addEventListener('mouseleave', hideTooltip);
+        path.addEventListener('click', async () => {
+          await selectDma(feature.dma);
+        });
+
+        mapSvg.appendChild(path);
+      });
+    }
+
+    async function getDmaSeries(dmaCode) {
+      if (state.dmaCache.has(dmaCode)) {
+        return state.dmaCache.get(dmaCode);
+      }
+      let payload = window.__DMA_DATA__ && window.__DMA_DATA__[dmaCode];
+      if (!payload) {
+        await loadScript(`dma_visual_data/dma/${dmaCode}.js`);
+        payload = window.__DMA_DATA__ && window.__DMA_DATA__[dmaCode];
+      }
+      if (!payload) {
+        payload = await loadJson(`dma_visual_data/dma/${dmaCode}.json`);
+      }
+      state.dmaCache.set(dmaCode, payload);
+      return payload;
+    }
+
+    function makeChartSvg(series, unbrandedSeries = []) {
+      const width = 860;
+      const height = 520;
+      const margin = { top: 20, right: 24, bottom: 124, left: 70 };
+      const innerWidth = width - margin.left - margin.right;
+      const innerHeight = height - margin.top - margin.bottom;
+      const combinedSeries = [...series, ...unbrandedSeries];
+      const maxValue = Math.max(...combinedSeries.map((point) => point[2]), 0);
+      const timeline = Array.from(new Set(combinedSeries.map((point) => {
+        const period = normalizePeriod(point);
+        return `${period.year}-${String(period.month).padStart(2, '0')}`;
+      })));
+      timeline.sort();
+      const xStep = timeline.length > 1 ? innerWidth / (timeline.length - 1) : innerWidth;
+
+      const xFromPoint = (point) => {
+        const period = normalizePeriod(point);
+        const key = `${period.year}-${String(period.month).padStart(2, '0')}`;
+        const index = timeline.indexOf(key);
+        return margin.left + (index * xStep);
+      };
+      const y = (value) => margin.top + innerHeight - ((value / (maxValue || 1)) * innerHeight);
+      const linePath = series.map((point, index) => `${index === 0 ? 'M' : 'L'}${xFromPoint(point)},${y(point[2])}`).join(' ');
+      const unbrandedLinePath = unbrandedSeries.length
+        ? unbrandedSeries.map((point, index) => `${index === 0 ? 'M' : 'L'}${xFromPoint(point)},${y(point[2])}`).join(' ')
+        : '';
+      const yTicks = 4;
+      const tickValues = Array.from({ length: yTicks + 1 }, (_, index) => (maxValue / yTicks) * index);
+
+      const yAxis = tickValues.map((value) => {
+        const yPos = y(value);
+        return `
+          <line class="grid-line" x1="${margin.left}" x2="${width - margin.right}" y1="${yPos}" y2="${yPos}"></line>
+          <text class="axis" x="${margin.left - 12}" y="${yPos + 4}" text-anchor="end">${formatNumber(value)}</text>
+        `;
+      }).join('');
+
+      const xAxis = timeline.map((key, index) => {
+        const [year, month] = key.split('-').map(Number);
+        const label = formatPeriod([year, month, 0]);
+        return `
+        <g transform="translate(${margin.left + (index * xStep)}, ${height - margin.bottom + 12}) rotate(45)">
+          <text class="axis" text-anchor="start">${label}</text>
+        </g>
+      `;
+      }).join('');
+
+      const circles = series.map((point, index) => {
+        const label = `${formatPeriod(point)} • ${formatNumber(point[2])}`;
+        return `<circle class="dot" cx="${xFromPoint(point)}" cy="${y(point[2])}" r="3.2"><title>${label}</title></circle>`;
+      }).join('');
+
+      const unbrandedCircles = unbrandedSeries.map((point) => {
+        const label = `${formatPeriod(point)} • ${formatNumber(point[2])} unbranded`;
+        return `<circle cx="${xFromPoint(point)}" cy="${y(point[2])}" r="3.1" fill="#fffdf9" stroke="#2563eb" stroke-width="1.3"><title>${label}</title></circle>`;
+      }).join('');
+
+      const legend = unbrandedSeries.length ? `
+        <g transform="translate(${width - 190}, 18)">
+          <line x1="0" x2="24" y1="0" y2="0" stroke="rgba(168, 149, 122, 0.95)" stroke-width="2"></line>
+          <text class="axis" x="32" y="4">Aesthetic</text>
+          <line x1="0" x2="24" y1="18" y2="18" stroke="#2563eb" stroke-width="2"></line>
+          <text class="axis" x="32" y="22">Unbranded</text>
+        </g>
+      ` : '';
+
+      return `
+        <svg viewBox="0 0 ${width} ${height}" aria-label="Historical trend line chart">
+          <line x1="${margin.left}" x2="${margin.left}" y1="${margin.top}" y2="${height - margin.bottom}" class="axis-line"></line>
+          <line x1="${margin.left}" x2="${width - margin.right}" y1="${height - margin.bottom}" y2="${height - margin.bottom}" class="axis-line"></line>
+          ${yAxis}
+          ${xAxis}
+          <path d="${linePath}" class="line"></path>
+          ${unbrandedSeries.length ? `<path d="${unbrandedLinePath}" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="4 3"></path>` : ''}
+          ${circles}
+          ${unbrandedCircles}
+          ${legend}
+          <text x="${margin.left}" y="${height - 18}" class="axis-label">Month</text>
+          <text x="18" y="${margin.top - 4}" class="axis-label">Search volume</text>
+        </svg>
+      `;
+    }
+
+    async function renderSelectedSeries() {
+      if (!state.selectedDma) {
+        chartContainer.className = 'empty';
+        chartContainer.textContent = 'Click a DMA region, use the DMA selector, or choose one of the ranked markets to open the control view.';
+        setSummary(null, null, null);
+        return;
+      }
+
+      const dmaPayload = await getDmaSeries(state.selectedDma);
+      const series = dmaPayload.series[state.selectedKeyword];
+      const normalizedKeyword = normalizeTerm(state.selectedKeyword);
+      const unbrandedSeries = (dmaPayload.unbrandedSeries && dmaPayload.unbrandedSeries[normalizedKeyword]) || [];
+      if (!series || !series.length) {
+        chartContainer.className = 'empty';
+        chartContainer.textContent = `No historical points were found for ${state.selectedKeyword} in ${dmaPayload.name}.`;
+        setSummary(dmaPayload.name, 0, null);
+        document.getElementById('chart-caption').textContent = `${dmaPayload.name} · DMA ${dmaPayload.dma}`;
+        return;
+      }
+
+      const total = series.reduce((sum, point) => sum + point[2], 0);
+      const peakPoint = series.reduce((best, point) => point[2] > best[2] ? point : best, series[0]);
+      chartContainer.className = '';
+      chartContainer.innerHTML = makeChartSvg(series, unbrandedSeries);
+      document.getElementById('chart-caption').textContent = `${dmaPayload.name} · DMA ${dmaPayload.dma} · full monthly history${unbrandedSeries.length ? ' with unbranded overlay' : ''}`;
+      setSummary(dmaPayload.name, total, formatPeriod(peakPoint));
+    }
+
+    function populateDmaSelect() {
+      const totals = state.keywordTotals.totals[state.selectedKeyword] || {};
+      const dmaNames = state.keywordTotals.dmaNames || {};
+      const dmaOptions = Object.keys(totals)
+        .sort((a, b) => (dmaNames[a] || a).localeCompare(dmaNames[b] || b))
+        .map((dma) => ({ dma, name: dmaNames[dma] || dma }));
+
+      dmaSelect.innerHTML = dmaOptions.map((row) => `<option value="${row.dma}">${row.name} (${row.dma})</option>`).join('');
+      if (!dmaOptions.length) {
+        state.selectedDma = null;
+        return;
+      }
+      if (!dmaOptions.find((row) => row.dma === state.selectedDma)) {
+        state.selectedDma = dmaOptions[0].dma;
+      }
+      dmaSelect.value = state.selectedDma;
+    }
+
+    function populateKeywordSelect() {
+      keywordSelect.innerHTML = '';
+      state.keywordTotals.keywords.forEach((keyword) => {
+        const option = document.createElement('option');
+        option.value = keyword;
+        option.textContent = keyword;
+        keywordSelect.appendChild(option);
+      });
+
+      state.selectedKeyword = state.keywordTotals.keywords.includes('balletcore')
+        ? 'balletcore'
+        : state.keywordTotals.keywords[0];
+
+      keywordSelect.value = state.selectedKeyword;
+      keywordSelect.addEventListener('change', async (event) => {
+        state.selectedKeyword = event.target.value;
+        populateDmaSelect();
+        renderMap();
+        renderTop5PerCapita();
+        await selectDma(state.selectedDma);
+      });
+    }
+
+    async function init() {
+      try {
+        let geo = window.__DMA_GEO__;
+        let keywordTotals = window.__DMA_KEYWORD_TOTALS__;
+        if (!geo || !keywordTotals) {
+          [geo, keywordTotals] = await Promise.all([
+            loadJson('dma_visual_data/geo_projected.json'),
+            loadJson('dma_visual_data/keyword_totals.json'),
+          ]);
+        }
+        state.geo = geo;
+        state.keywordTotals = keywordTotals;
+        state.mapBaseView = { x: 0, y: 0, width: geo.width || 960, height: geo.height || 620 };
+        resetMapView();
+        populateKeywordSelect();
+        populateDmaSelect();
+        attachMapInteractions();
+        renderMap();
+        renderTop5PerCapita();
+        await selectDma(state.selectedDma);
+        dmaSelect.addEventListener('change', async (event) => {
+          await selectDma(event.target.value, { zoom: true });
+        });
+      } catch (error) {
+        chartContainer.className = 'empty';
+        chartContainer.textContent = `Could not load the visual assets. ${error.message}`;
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
